@@ -20,7 +20,25 @@ admin.site.register(Voy,VoyAdmin)
 
 
 
+class ServiceAdmin(admin.ModelAdmin):
+    search_fields = ['name','description']
+    list_filter = []
+    list_display = ('name','description','color','status')
+    list_editable = ('color',)
+    fieldsets = [
+        ('Basic Information',{'fields': ['name','description','color','status']}),
+    ]
+admin.site.register(Service,ServiceAdmin)
 
-admin.site.register(Service)
 admin.site.register(Terminal)
-admin.site.register(Vessel)
+
+
+class VesselAdmin(admin.ModelAdmin):
+    search_fields = ['name','imo','description']
+    list_filter = ['v_type']
+    list_display = ('name','description','lov','imo','color','v_type','status')
+    list_editable = ('color',)
+    fieldsets = [
+        ('Basic Information',{'fields': ['name','description','lov','imo','color','v_type','status']}),
+    ]
+admin.site.register(Vessel,VesselAdmin)

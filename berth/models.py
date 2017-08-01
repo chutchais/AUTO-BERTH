@@ -31,6 +31,7 @@ class Service(models.Model):
 	name = models.CharField(max_length=50,primary_key=True)
 	slug = models.SlugField(unique=True,blank=True, null=True)
 	description = models.CharField(max_length=255,blank=True, null=True)
+	color = ColorField(default='#CCFFFF')
 	status = models.CharField(max_length=1,choices=STATUS_CHOICES,default=ACTIVE)
 	created_date = models.DateTimeField(auto_now_add=True)
 	modified_date = models.DateTimeField(blank=True, null=True,auto_now=True)
@@ -41,17 +42,19 @@ class Service(models.Model):
 
 class Vessel(models.Model):
 	V = 'VESSEL'
-	B ='BARTH'
+	B ='BARGE'
+	N = 'NOTICE'
 	VESSEL_TYPE_CHOICES = (
         (V, 'Vessel'),
-        (B, 'Barth'),
+        (B, 'Barge'),
+        (N, 'Notice'),
     )
 	name = models.CharField(max_length=50,primary_key=True)
 	slug = models.SlugField(unique=True,blank=True, null=True)
 	description = models.CharField(max_length=255,blank=True, null=True)
 	lov = models.IntegerField(verbose_name ='Lenght of Vessel',default=100)
 	imo = models.CharField(verbose_name ='IMO number',max_length=20,blank=True, null=True)
-	color = ColorField(default='#CCFFFF')
+	color = ColorField(default='#FFFFFF')
 	v_type = models.CharField(verbose_name ='Vessel Type',max_length=10,choices=VESSEL_TYPE_CHOICES,default=V)
 	status = models.CharField(max_length=1,choices=STATUS_CHOICES,default=ACTIVE)
 	created_date = models.DateTimeField(auto_now_add=True)
@@ -72,12 +75,12 @@ class Voy(models.Model):
 	start_pos = models.IntegerField(verbose_name ='Start Position',default=50)
 	performa_in =  models.DateTimeField(blank=True, null=True)
 	performa_out =  models.DateTimeField(blank=True, null=True)
-	eta =  models.DateTimeField(verbose_name ='Arrival Time',blank=True, null=True)
-	etb =  models.DateTimeField(verbose_name ='Berth Time',blank=True, null=True)
-	etd =  models.DateTimeField(verbose_name ='Departure Time',blank=True, null=True)
-	dis_no =  models.IntegerField(verbose_name ='Number of Discharge',default=0)
-	load_no =  models.IntegerField(verbose_name ='Number of Loading',default=0)
-	est_teu = models.IntegerField(verbose_name ='Estimate TEU',default=0)
+	eta =  models.DateTimeField(verbose_name ='ETA',blank=True, null=True)
+	etb =  models.DateTimeField(verbose_name ='ETB',blank=True, null=True)
+	etd =  models.DateTimeField(verbose_name ='ETD',blank=True, null=True)
+	dis_no =  models.IntegerField(verbose_name ='Discharge',default=0)
+	load_no =  models.IntegerField(verbose_name ='Loading',default=0)
+	est_teu = models.IntegerField(verbose_name ='Est TEU',default=0)
 	vsl_oper = models.CharField(verbose_name ='Vsl Operator',max_length=20,blank=True, null=True)
 	arrival_draft = models.CharField(verbose_name ='Arrival draft',max_length=50,blank=True, null=True,default=0)
 	departure_draft = models.CharField(verbose_name ='Departure draft',max_length=50,blank=True, null=True,default=0)

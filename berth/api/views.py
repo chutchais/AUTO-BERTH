@@ -14,7 +14,7 @@ from rest_framework.filters import (
 	OrderingFilter,
 	)
 
-from .serialize import VoySerializer
+from .serialize import VoySerializer,VoyDetailSerializer
 from berth.models import Voy
 
 
@@ -37,3 +37,9 @@ class VoyListAPIView(ListAPIView):
 	# filter_backends=[SearchFilter,OrderingFilter],
 	# search_fields =['content','user__first_name']
 	# pagination_class = PostPageNumberPagination
+
+class VoyDetailAPIView(RetrieveAPIView):
+	queryset=Voy.objects.all()
+	serializer_class=VoyDetailSerializer
+	lookup_field='slug'
+	# print ("vessel details")
