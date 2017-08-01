@@ -1,0 +1,8 @@
+*.pyc
+equipment/*.pyc
+equipment/migrations/*.pyc
+equipment/migrations/*.py
+machine/*.pyc
+machine/migrations/*.py
+machine/migrations/*.pyc
+db.sqlite3
