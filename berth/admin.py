@@ -9,12 +9,12 @@ class VoyAdmin(admin.ModelAdmin):
     list_display = ('service','vessel','code','voy','terminal','performa_in','performa_out',
         'eta','etb','etd','dis_no','load_no','est_teu','arrival_draft','vsl_oper')
     fieldsets = [
-        ('Basic Information',{'fields': ['voy','slug','code',('service','vessel','vsl_oper'),
+        ('Basic Information',{'fields': ['voy','code',('service','vessel','vsl_oper'),
         	('terminal','start_pos'),('arrival_draft','departure_draft'),'remark']}),
-        ('Performa',{'fields': [('performa_in','performa_out')]}),
+        ('Performa',{'fields': [('performa_in','performa_out'),'move_confirm']}),
         ('Container Information',{'fields': [('dis_no','load_no'),'est_teu']}),
         ('Estimate Time',{'fields': [('eta','etb','etd')]}),
-        ('Save as Draft',{'fields': [('draft')]}),
+        ('Save as Draft',{'fields': [('draft'),'text_pos']}),
     ]
 admin.site.register(Voy,VoyAdmin)
 
@@ -23,10 +23,10 @@ admin.site.register(Voy,VoyAdmin)
 class ServiceAdmin(admin.ModelAdmin):
     search_fields = ['name','description']
     list_filter = []
-    list_display = ('name','description','color','status')
-    list_editable = ('color',)
+    list_display = ('name','description','color','move_performa','status')
+    list_editable = ('color','move_performa')
     fieldsets = [
-        ('Basic Information',{'fields': ['name','description','color','status']}),
+        ('Basic Information',{'fields': ['name','description','color','move_performa','status']}),
     ]
 admin.site.register(Service,ServiceAdmin)
 

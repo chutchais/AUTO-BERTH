@@ -32,6 +32,7 @@ class Service(models.Model):
 	slug = models.SlugField(unique=True,blank=True, null=True)
 	description = models.CharField(max_length=255,blank=True, null=True)
 	color = ColorField(default='#CCFFFF')
+	move_performa =  models.IntegerField(verbose_name ='Move Performa',default=0)
 	status = models.CharField(max_length=1,choices=STATUS_CHOICES,default=ACTIVE)
 	created_date = models.DateTimeField(auto_now_add=True)
 	modified_date = models.DateTimeField(blank=True, null=True,auto_now=True)
@@ -66,6 +67,16 @@ class Vessel(models.Model):
 		return self.name
 
 class Voy(models.Model):
+	R = 'R'
+	L ='L'
+	T = 'T'
+	B = 'B'
+	TEXT_POS_CHOICES = (
+        (R, 'Right'),
+        (L, 'Left'),
+        (T, 'Top'),
+        (B, 'Buttom'),
+    )
 	voy = models.CharField(max_length=50,primary_key=True)
 	slug = models.SlugField(unique=True,blank=True, null=True)
 	code = models.CharField(max_length=20,blank=True, null=True)
@@ -75,6 +86,8 @@ class Voy(models.Model):
 	start_pos = models.IntegerField(verbose_name ='Start Position',default=50)
 	performa_in =  models.DateTimeField(blank=True, null=True)
 	performa_out =  models.DateTimeField(blank=True, null=True)
+	move_performa =  models.IntegerField(verbose_name ='Move Performa',default=0)
+	move_confirm = models.BooleanField(verbose_name ='Move Confirm',default=False)
 	eta =  models.DateTimeField(verbose_name ='ETA',blank=True, null=True)
 	etb =  models.DateTimeField(verbose_name ='ETB',blank=True, null=True)
 	etd =  models.DateTimeField(verbose_name ='ETD',blank=True, null=True)
@@ -86,6 +99,9 @@ class Voy(models.Model):
 	departure_draft = models.CharField(verbose_name ='Departure draft',max_length=50,blank=True, null=True,default=0)
 	remark = models.TextField(max_length=255,blank=True, null=True)
 	draft = models.BooleanField(verbose_name ='Saved as Draft',default=False)
+	text_pos = models.CharField(verbose_name ="Text position for Barge",max_length=1,choices=TEXT_POS_CHOICES,default=R)
+
+
 
 
 # Handle Slug of Vessel

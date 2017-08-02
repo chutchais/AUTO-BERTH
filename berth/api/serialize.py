@@ -16,6 +16,7 @@ class VoySerializer(ModelSerializer):
 	slug = SerializerMethodField()
 	startCol = SerializerMethodField()
 	stopCol = SerializerMethodField()
+	move_performa = SerializerMethodField()
 	class Meta:
 		model = Voy
 		# fields ='__all__'
@@ -24,7 +25,7 @@ class VoySerializer(ModelSerializer):
 				'lov','dis_no','load_no','est_teu',
 				'terminal','start_pos','vessel_type','color','remark',
 				'vsl_oper','arrival_draft','departure_draft','slug','draft',
-				'startCol','stopCol']
+				'startCol','stopCol','move_performa','move_confirm','text_pos']
 
 	def get_lov(self,obj):
 		# content_type = obj.get_content_type
@@ -47,6 +48,9 @@ class VoySerializer(ModelSerializer):
 
 	def get_stopCol(self,obj):
 		return obj.terminal.stop_range
+
+	def get_move_performa(self,obj):
+		return obj.service.move_performa
 
 
 class VoyDetailSerializer(ModelSerializer):
