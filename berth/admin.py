@@ -4,7 +4,7 @@ from django.contrib import admin
 from .models import Terminal,Vessel,Service,Voy
 
 class VoyAdmin(admin.ModelAdmin):
-    search_fields = ['voy','code','vessel','service','terminal','vsl_oper','remark']
+    search_fields = ['voy','code','vessel__name','service__name','terminal__name','vsl_oper','remark']
     list_filter = ['draft','eta','etb','etd','vessel','vsl_oper','service','terminal']
     list_display = ('service','vessel','code','voy','terminal','performa_in','performa_out',
         'eta','etb','etd','dis_no','load_no','est_teu','arrival_draft','vsl_oper')

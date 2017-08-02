@@ -155,7 +155,8 @@ pre_save.connect(pre_save_service_receiver, sender=Service)
 # Handle Slug of Voy
 
 def create_voy_slug(instance, new_slug=None):
-    slug = slugify(instance.voy)
+    slug = slugify(instance.voy + '-v')
+    print ('New slug %s' % slug)
     if new_slug is not None:
         slug = new_slug
     qs = Terminal.objects.filter(slug=slug).order_by("-id")
