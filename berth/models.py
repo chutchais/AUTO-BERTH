@@ -2,6 +2,7 @@ from django.db import models
 from colorfield.fields import ColorField
 from django.utils.text import slugify
 from django.db.models.signals import pre_save
+from django.core.exceptions import ValidationError
 
 # Create your models here.
 ACTIVE='A'
@@ -77,7 +78,8 @@ class Voy(models.Model):
         (T, 'Top'),
         (B, 'Buttom'),
     )
-	voy = models.CharField(max_length=50,primary_key=True)
+	# id = models.AutoField(primary_key=True)
+	voy = models.CharField(max_length=50 ,primary_key=True)#,primary_key=True
 	slug = models.SlugField(unique=True,blank=True, null=True)
 	code = models.CharField(max_length=20,blank=True, null=True)
 	vessel = models.ForeignKey('Vessel', related_name='plans')
@@ -100,6 +102,12 @@ class Voy(models.Model):
 	remark = models.TextField(max_length=255,blank=True, null=True)
 	draft = models.BooleanField(verbose_name ='Saved as Draft',default=False)
 	text_pos = models.CharField(verbose_name ="Text position for Barge",max_length=1,choices=TEXT_POS_CHOICES,default=R)
+
+	def clean(self):
+		if self.etd <= self.etb :
+			raise ValidationError('ETD must bigger than ETB')
+	# class Meta:
+	# 	unique_together = ('voy', 'vessel',)
 
 
 
