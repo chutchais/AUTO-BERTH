@@ -25,7 +25,7 @@ class VoySerializer(ModelSerializer):
 				'lov','dis_no','load_no','est_teu',
 				'terminal','start_pos','vessel_type','color','remark',
 				'vsl_oper','arrival_draft','departure_draft','slug','draft',
-				'startCol','stopCol','move_performa','move_confirm','text_pos']
+				'startCol','stopCol','move_performa','move_confirm','text_pos','qc']
 
 	def get_lov(self,obj):
 		# content_type = obj.get_content_type

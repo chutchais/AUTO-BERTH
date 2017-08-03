@@ -56,7 +56,6 @@ class Vessel(models.Model):
 	description = models.CharField(max_length=255,blank=True, null=True)
 	lov = models.IntegerField(verbose_name ='Lenght of Vessel',default=100)
 	imo = models.CharField(verbose_name ='IMO number',max_length=20,blank=True, null=True)
-	color = ColorField(default='#FFFFFF')
 	v_type = models.CharField(verbose_name ='Vessel Type',max_length=10,choices=VESSEL_TYPE_CHOICES,default=V)
 	status = models.CharField(max_length=1,choices=STATUS_CHOICES,default=ACTIVE)
 	created_date = models.DateTimeField(auto_now_add=True)
@@ -78,8 +77,7 @@ class Voy(models.Model):
         (T, 'Top'),
         (B, 'Buttom'),
     )
-	# id = models.AutoField(primary_key=True)
-	voy = models.CharField(max_length=50 ,primary_key=True)#,primary_key=True
+	voy = models.CharField(max_length=50 )#,primary_key=True
 	slug = models.SlugField(unique=True,blank=True, null=True)
 	code = models.CharField(max_length=20,blank=True, null=True)
 	vessel = models.ForeignKey('Vessel', related_name='plans')
@@ -93,6 +91,7 @@ class Voy(models.Model):
 	eta =  models.DateTimeField(verbose_name ='ETA',blank=True, null=True)
 	etb =  models.DateTimeField(verbose_name ='ETB',blank=True, null=True)
 	etd =  models.DateTimeField(verbose_name ='ETD',blank=True, null=True)
+	qc = models.CharField(verbose_name ='Q',max_length=20,blank=True, null=True)
 	dis_no =  models.IntegerField(verbose_name ='Discharge',default=0)
 	load_no =  models.IntegerField(verbose_name ='Loading',default=0)
 	est_teu = models.IntegerField(verbose_name ='Est TEU',default=0)
@@ -102,6 +101,7 @@ class Voy(models.Model):
 	remark = models.TextField(max_length=255,blank=True, null=True)
 	draft = models.BooleanField(verbose_name ='Saved as Draft',default=False)
 	text_pos = models.CharField(verbose_name ="Text position for Barge",max_length=1,choices=TEXT_POS_CHOICES,default=R)
+	next_date = models.IntegerField(verbose_name ='Next arrive date',default=14)
 
 	def clean(self):
 		if self.etd <= self.etb :
@@ -121,7 +121,7 @@ def create_vessel_slug(instance, new_slug=None):
     qs = Vessel.objects.filter(slug=slug).order_by("-id")
     exists = qs.exists()
     if exists:
-        new_slug = "%s-%s" %(slug, qs.first().imo)
+        new_slug = "%s-%s" %(slug, qs.first().lov)
         return create_vessel_slug(instance, new_slug=new_slug)
     return slug
 
@@ -160,7 +160,7 @@ def create_service_slug(instance, new_slug=None):
     slug = slugify(instance.name)
     if new_slug is not None:
         slug = new_slug
-    qs = Terminal.objects.filter(slug=slug).order_by("-id")
+    qs = Service.objects.filter(slug=slug).order_by("-id")
     exists = qs.exists()
     if exists:
         new_slug = "%s-%s" %(slug, qs.first().id)
@@ -183,11 +183,11 @@ def create_voy_slug(instance, new_slug=None):
     print ('New slug %s' % slug)
     if new_slug is not None:
         slug = new_slug
-    qs = Terminal.objects.filter(slug=slug).order_by("-id")
+    qs = Voy.objects.filter(slug=slug).order_by("-id")
     exists = qs.exists()
     if exists:
         new_slug = "%s-%s" %(slug, qs.first().id)
-        return create_service_slug(instance, new_slug=new_slug)
+        return create_voy_slug(instance, new_slug=new_slug)
     return slug
 
 
