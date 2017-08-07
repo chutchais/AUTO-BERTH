@@ -3,11 +3,10 @@ from django.contrib import admin
 # Register your models here.
 from .models import Terminal,Vessel,Service,Voy
 
-
+# from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedDropdownFilter
 from datetime import date
 from django.utils.translation import gettext_lazy as _
-# from django import forms
-# from .models import Voy
+
 
 
 class ETAListFilter(admin.SimpleListFilter):
@@ -177,7 +176,7 @@ class ETDListFilter(admin.SimpleListFilter):
 
 class VoyAdmin(admin.ModelAdmin):
     search_fields = ['voy','code','vessel__name','service__name','terminal__name','vsl_oper','remark']
-    list_filter = ['terminal','vessel__v_type',ETAListFilter,ETBListFilter,ETDListFilter,'draft','vessel','vsl_oper','service']
+    list_filter = ('terminal','vessel__v_type',ETAListFilter,ETBListFilter,ETDListFilter,'draft')
     list_display = ('service','vessel','code','voy','terminal','performa_in','performa_out',
         'eta','etb','etd','dis_no','load_no','est_teu','arrival_draft','vsl_oper')
     fieldsets = [

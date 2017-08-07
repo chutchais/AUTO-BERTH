@@ -106,6 +106,21 @@ class Voy(models.Model):
 	def clean(self):
 		if self.etd <= self.etb :
 			raise ValidationError('ETD must bigger than ETB')
+
+	def save(self, *args, **kwargs):
+		teu_factor = 1.43
+		if self.dis_no != 0 :
+			teu_dis = self.dis_no * teu_factor
+		else:
+			teu_dis = 0
+
+		if self.load_no != 0 :
+			teu_load = self.load_no * teu_factor
+		else :
+			teu_load = 0
+
+		self.est_teu = teu_dis + teu_load
+		super(Voy, self).save(*args, **kwargs) # Call the "real" save() method.
 	# class Meta:
 	# 	unique_together = ('voy', 'vessel',)
 
