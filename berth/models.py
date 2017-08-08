@@ -4,6 +4,8 @@ from django.utils.text import slugify
 from django.db.models.signals import pre_save
 from django.core.exceptions import ValidationError
 
+from datetime import datetime, timedelta
+
 # Create your models here.
 ACTIVE='A'
 DEACTIVE='D'
@@ -102,10 +104,23 @@ class Voy(models.Model):
 	draft = models.BooleanField(verbose_name ='Saved as Draft',default=False)
 	text_pos = models.CharField(verbose_name ="Text position for Barge",max_length=1,choices=TEXT_POS_CHOICES,default=R)
 	next_date = models.IntegerField(verbose_name ='Next arrive date',default=14)
+	imp_release_date = models.DateTimeField(verbose_name ='Import Release Date',help_text='',blank=True, null=True)
+	export_cutoff_date = models.DateTimeField(verbose_name ='Export Cutoff Date',blank=True, null=True)
+
+	def __str__(self):
+		return ('%s of %s' % (self.voy,self.vessel))
 
 	def clean(self):
 		if self.etd <= self.etb :
-			raise ValidationError('ETD must bigger than ETB')
+			raise ValidationError('ETD must be bigger than ETB')
+
+		if self.imp_release_date != None :
+			if self.imp_release_date <= self.etb :
+				raise ValidationError('Import Release Date must be after ETB')
+
+		if self.export_cutoff_date != None :
+			if self.export_cutoff_date >= self.etb :
+				raise ValidationError('Export Cutoff Date must be before ETB')
 
 	def save(self, *args, **kwargs):
 		teu_factor = 1.43
@@ -118,8 +133,16 @@ class Voy(models.Model):
 			teu_load = self.load_no * teu_factor
 		else :
 			teu_load = 0
-
 		self.est_teu = teu_dis + teu_load
+
+		if self.imp_release_date == None  :
+			self.imp_release_date = self.etb + timedelta(hours=24)
+
+		if self.export_cutoff_date == None :
+			self.export_cutoff_date = self.etb - timedelta(hours=12)
+
+
+
 		super(Voy, self).save(*args, **kwargs) # Call the "real" save() method.
 	# class Meta:
 	# 	unique_together = ('voy', 'vessel',)

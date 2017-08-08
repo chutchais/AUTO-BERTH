@@ -185,6 +185,7 @@ class VoyAdmin(admin.ModelAdmin):
         ('Performa',{'fields': [('performa_in','performa_out'),'move_confirm']}),
         ('Container Information',{'fields': [('dis_no','load_no'),'est_teu','qc']}),
         ('Estimate Time',{'fields': [('eta','etb','etd')]}),
+        ('Import/Export Control',{'fields': [('imp_release_date','export_cutoff_date')]}),
         ('Save as Draft',{'fields': [('draft'),'text_pos']}),
     ]
 admin.site.register(Voy,VoyAdmin)
@@ -208,7 +209,7 @@ class TerminalAdmin(admin.ModelAdmin):
     list_display = ('name','description','start_range','stop_range','status')
     # list_editable = ('color',)
     fieldsets = [
-        ('Basic Information',{'fields': ['name','description','lov','imo','v_type','status']}),
+        ('Basic Information',{'fields': ['name','description','status']}),
     ]
 admin.site.register(Terminal,TerminalAdmin)
 
