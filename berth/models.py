@@ -217,14 +217,16 @@ pre_save.connect(pre_save_service_receiver, sender=Service)
 # Handle Slug of Voy
 
 def create_voy_slug(instance, new_slug=None):
-    slug = slugify(instance.voy + '-v')
+    slug = slugify(instance.voy + '-' + instance.code)
     print ('New slug %s' % slug)
     if new_slug is not None:
         slug = new_slug
     qs = Voy.objects.filter(slug=slug).order_by("-id")
     exists = qs.exists()
     if exists:
-        new_slug = "%s-%s" %(slug, qs.first().id)
+        # new_slug = "%s-%s" %(slug, qs.first().id)
+        new_slug = "%s-%s" %(slug, qs.first().performa_in.strftime("%Y-%m-%d"))
+        print ('New slug %s' % new_slug)
         return create_voy_slug(instance, new_slug=new_slug)
     return slug
 
