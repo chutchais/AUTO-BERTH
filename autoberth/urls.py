@@ -16,9 +16,17 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from django.conf.urls import include, url
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^berth/', include('berth.urls')),
     url(r'api/voy/', include("berth.api.urls", namespace='voy-api')),
     url(r'api/vessel/', include("vessel.api.urls", namespace='vessel-api')),
 ]
+
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

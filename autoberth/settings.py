@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'berth',
     'vessel',
+    'pdfdocument'
 ]
 
 MIDDLEWARE = [
@@ -109,7 +110,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Bangkok'
 
 USE_I18N = True
 
@@ -122,6 +123,13 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = "d:\\auto-berth\\static\\"
+MEDIA_URL = "/media/"
+MEDIA_ROOT = "d:\\auto-berth\\media\\"
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, "static"),
+#     'd:\\auto-berth\\static\\',
+# ]
 
 
 
