@@ -6,6 +6,8 @@ from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.http import HttpResponse
 import os.path
 from django.conf import settings
+
+from .models import ReportFile
 # def xls_to_response(xls, fname):
 #     response = HttpResponse(mimetype="application/ms-excel")
 #     response['Content-Disposition'] = 'attachment; filename=%s' % fname
@@ -18,6 +20,10 @@ from django.conf import settings
 #     response['Content-Disposition'] = 'attachment; filename=test.xlsm'
 #     xls.save(response)
 #     return response
+def index(request):
+	reports = ReportFile.objects.all().order_by('-modified_date')
+	return render(request, 'index.html', {'objs': reports})
+
 
 
 

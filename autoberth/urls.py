@@ -20,6 +20,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 urlpatterns = [
+    url(r'^$', include('berth.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^berth/', include('berth.urls')),
     url(r'api/voy/', include("berth.api.urls", namespace='voy-api')),

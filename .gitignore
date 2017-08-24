@@ -8,4 +8,4 @@ machine/migrations/*.pyc
 db.sqlite3
 berth/migrations/*.py
 berth/migrations/*.pyc
-db.sqlite3_before_fix_voy_pk
+

@@ -236,3 +236,26 @@ def pre_save_voy_receiver(sender, instance, *args, **kwargs):
         instance.slug = create_voy_slug(instance)
 
 pre_save.connect(pre_save_voy_receiver, sender=Voy)
+
+
+
+# def user_directory_path(instance, filename):
+#     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
+#     # uploads/%Y/%m/%d/
+#     return '%s/%s'.format(%Y,%m,%d)
+
+class ReportFile(models.Model):
+	week_name = models.CharField(max_length=100)
+	current_week = models.FileField(upload_to='uploads/%Y/%m/%d/')
+	next_week = models.FileField(upload_to='uploads/%Y/%m/%d/')
+	remark = models.TextField(blank=True, null=True)
+	created_date = models.DateTimeField(auto_now_add=True)
+	modified_date = models.DateTimeField(blank=True, null=True,auto_now=True)
+	user = models.ForeignKey('auth.User',blank=True,null=True)
+
+	def __str__(self):
+		return ('%s' % (self.week_name))
+
+	# def get_current_absolute_url(self):
+	#     from django.urls import reverse
+	#     return reverse('people.views.details', args=[str(self.id)])

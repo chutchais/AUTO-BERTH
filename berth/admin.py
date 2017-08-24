@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Terminal,Vessel,Service,Voy
+from .models import Terminal,Vessel,Service,Voy,ReportFile
 
 # from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedDropdownFilter
 from datetime import date
@@ -224,3 +224,7 @@ class VesselAdmin(admin.ModelAdmin):
         ('Basic Information',{'fields': ['name','description','lov','imo','v_type','status']}),
     ]
 admin.site.register(Vessel,VesselAdmin)
+
+
+
+admin.site.register(ReportFile)
