@@ -6,8 +6,35 @@ from .models import Terminal,Vessel,Service,Voy,ReportFile
 # from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedDropdownFilter
 from datetime import date
 from django.utils.translation import gettext_lazy as _
+from django.contrib import messages
+import copy
 
 
+def copy_new_voy(self, request, queryset):
+    
+    if queryset.count() >1 :
+        self.message_user(request, "Not support multiple Voy selection" ,level=messages.ERROR)
+        return None
+    from datetime import timedelta
+    for obj in queryset:
+        print (obj.voy)
+        new_obj = copy.copy(obj)
+        # initial Data
+        new_obj.id= None
+        new_obj.voy = obj.voy+'_draft'
+        new_obj.performa_in = obj.performa_in + timedelta(days=7)
+        new_obj.performa_out = obj.performa_out + timedelta(days=7)
+        new_obj.eta = obj.eta + timedelta(days=7)
+        new_obj.etb = obj.etb + timedelta(days=7)
+        new_obj.etd = obj.etd + timedelta(days=7)
+        new_obj.imp_release_date = obj.imp_release_date + timedelta(days=7) if obj.imp_release_date != None else  obj.imp_release_date
+        new_obj.export_cutoff_date = obj.export_cutoff_date + timedelta(days=7) if obj.export_cutoff_date != None else  obj.export_cutoff_date
+        new_obj.draft = True
+        new_obj.save()
+
+    self.message_user(request, "Draft fo %s successfully create Locker ports." % new_obj.voy)
+
+copy_new_voy.short_description = "Copy to new Voy"
 
 class ETAListFilter(admin.SimpleListFilter):
     # Human-readable title which will be displayed in the
@@ -188,6 +215,8 @@ class VoyAdmin(admin.ModelAdmin):
         ('Import/Export Control',{'fields': [('imp_release_date','export_cutoff_date')]}),
         ('Save as Draft',{'fields': [('draft'),'text_pos']}),
     ]
+    actions =[copy_new_voy]
+
 admin.site.register(Voy,VoyAdmin)
 
 
@@ -228,3 +257,6 @@ admin.site.register(Vessel,VesselAdmin)
 
 
 admin.site.register(ReportFile)
+
+
+
