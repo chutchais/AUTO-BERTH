@@ -208,7 +208,7 @@ class VoyAdmin(admin.ModelAdmin):
         'eta','etb','etd','dis_no','load_no','est_teu','arrival_draft','vsl_oper')
     fieldsets = [
         ('Basic Information',{'fields': ['voy','code',('service','vessel','vsl_oper'),
-        	('terminal','start_pos'),('arrival_draft','departure_draft'),'remark']}),
+        	('terminal','start_pos','inverse'),('arrival_draft','departure_draft'),'remark']}),
         ('Performa',{'fields': [('performa_in','performa_out'),'move_confirm']}),
         ('Container Information',{'fields': [('dis_no','load_no'),'est_teu','qc']}),
         ('Estimate Time',{'fields': [('eta','etb','etd')]}),

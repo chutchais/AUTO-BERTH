@@ -106,6 +106,7 @@ class Voy(models.Model):
 	next_date = models.IntegerField(verbose_name ='Next arrive date',default=14)
 	imp_release_date = models.DateTimeField(verbose_name ='Import Release Date',help_text='',blank=True, null=True)
 	export_cutoff_date = models.DateTimeField(verbose_name ='Export Cutoff Date',blank=True, null=True)
+	inverse = models.BooleanField(verbose_name ='Inverse 180',default=False)
 
 	def __str__(self):
 		return ('%s of %s' % (self.voy,self.vessel))
