@@ -32,7 +32,7 @@ class VoyListAPIView(ListAPIView):
 		print ('From : %s  -- To : %s ' % (from_date,to_date))
 		queryset_list = Voy.objects.filter(
 				Q(etb__range=[from_date,to_date])|
-				Q(etd__range=[from_date,to_date]))
+				Q(etd__range=[from_date,to_date])).order_by('etb')
 		return queryset_list
 	# filter_backends=[SearchFilter,OrderingFilter],
 	# search_fields =['content','user__first_name']
