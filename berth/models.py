@@ -124,13 +124,13 @@ class Voy(models.Model):
 		if self.etd <= self.etb :
 			raise ValidationError('ETD must be bigger than ETB')
 
-		if self.imp_release_date != None :
-			if self.imp_release_date <= self.etb :
-				raise ValidationError('Import Release Date must be after ETB')
+		# if self.imp_release_date != None :
+		# 	if self.imp_release_date <= self.etb :
+		# 		raise ValidationError('Import Release Date must be after ETB')
 
-		if self.export_cutoff_date != None :
-			if self.export_cutoff_date >= self.etb :
-				raise ValidationError('Export Cutoff Date must be before ETB')
+		# if self.export_cutoff_date != None :
+		# 	if self.export_cutoff_date >= self.etb :
+		# 		raise ValidationError('Export Cutoff Date must be before ETB')
 
 	def save(self, *args, **kwargs):
 		teu_factor = 1.43
