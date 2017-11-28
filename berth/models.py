@@ -6,6 +6,8 @@ from django.core.exceptions import ValidationError
 
 from datetime import datetime, timedelta
 
+from django.urls import reverse
+
 # Create your models here.
 ACTIVE='A'
 DEACTIVE='D'
@@ -107,9 +109,16 @@ class Voy(models.Model):
 	imp_release_date = models.DateTimeField(verbose_name ='Import Release Date',help_text='',blank=True, null=True)
 	export_cutoff_date = models.DateTimeField(verbose_name ='Export Cutoff Date',blank=True, null=True)
 	inverse = models.BooleanField(verbose_name ='Inverse 180',default=False)
+	modified_date = models.DateTimeField(blank=True, null=True,auto_now=True)
 
 	def __str__(self):
 		return ('%s of %s' % (self.voy,self.vessel))
+
+	def get_absolute_url(self):
+		return reverse('berth:voy-detail', kwargs={'slug': self.slug})
+
+	def has_cutoff(self):
+		return True if self.cutoff_set.count()>0 else False
 
 	def clean(self):
 		if self.etd <= self.etb :
@@ -263,3 +272,22 @@ class ReportFile(models.Model):
 	# def get_current_absolute_url(self):
 	#     from django.urls import reverse
 	#     return reverse('people.views.details', args=[str(self.id)])
+
+# Add new for cutoff setting
+class cutoff(models.Model):
+	voy = models.ForeignKey(Voy)
+	dry_date = models.DateTimeField(verbose_name ='Dry CutOff',blank=True, null=True)
+	reef_date = models.DateTimeField(verbose_name ='Reef CutOff',blank=True, null=True)
+	chilled_date = models.DateTimeField(verbose_name ='Chilled CutOff',blank=True, null=True)
+	durian_date = models.DateTimeField(verbose_name ='Durian/Longan CutOff',blank=True, null=True)
+	created_date = models.DateTimeField(auto_now_add=True)
+	modified_date = models.DateTimeField(blank=True, null=True,auto_now=True)
+	user = models.ForeignKey('auth.User',blank=True,null=True)
+
+	def __str__(self):
+		return ('%s' % (self.voy))
+
+	def get_absolute_url(self):
+		return reverse('berth:cutoff-detail', kwargs={'pk': self.pk})
+
+

@@ -1,0 +1,309 @@
+{% extends "base.html" %}
+{% load system_tag %}
+
+{% block head %}
+{% endblock head %}
+
+{% block title %}
+    Berth Schedule Report
+{% endblock %}
+
+
+{% block form_content %}
+<div class="row">
+    <h3>
+    Cut-off Report of Workweek {{ week }} 
+    <a href="{% url 'berth:cutoff-home' %}?year={{year}}&week={{week|add:-1}}"><small>previous</small></a>
+    |<a href="{% url 'berth:cutoff-home' %}"><small>current</small></a>
+    |<a href="{% url 'berth:cutoff-home' %}?year={{year}}&week={{week|add:1}}"><small>next</small></a>
+    </h3>
+	<!-- Parameter Section -->
+
+    <table class="table table-bordered">
+      <tr class="active">
+        <th></th>
+        <th>Service</th>
+        <th>Vessel</th>
+        <th>Code</th>
+        <th>Voy</th>
+        <th>DRY (24HR)</th>
+        <th>REEF (12HR)</th>
+        <th>Chilled Cargo</th>
+        <th>BERTH</th>
+        <th>Durain / Longan</th>
+        <th>Status</th>
+      </tr>
+
+             {% for obj in B %}
+               {% is_fix_cutoff obj.service as IsCutOff %}
+               {% is_arrive obj.etb as IsArrive %}
+               {% cut obj.service as newService %}
+               <tr>
+                  <td>
+                  B.1
+                  </td>
+                  <td>
+                  <a href="{{ obj.get_absolute_url }}">{{ newService}}</a>
+                  </td>
+                  <td>
+                  {{ obj.vessel}}
+                  </td>
+                  <td>
+                  {{ obj.code}}
+                  </td>
+                  <td>
+                  {{ obj.voy}}
+                  </td>
+                  
+                    <!-- DRY -->
+                    {% if not obj.has_cutoff %}
+                      
+                        {% if IsCutOff %}
+                          {% get_fix_cutoff obj.service obj.etb  as NewCutDate %}
+                          {% is_overdue NewCutDate as isOver %}
+                          <td {{isOver}} >{{ NewCutDate|date:"d/m H:i"}}</td>
+                        {% else %}
+                          {% decrease_hour obj.etb 24 as delete_24 %}
+                          {% is_overdue delete_24 as isOver %}
+                          <td {{isOver}} >{{ delete_24|date:"d/m H:i"}}</td>
+                        {% endif %}
+                      
+                    {% else %}
+                      <!-- New value from CutOff -->
+                      
+                      {% if obj.cutoff_set.first.dry_date %}
+                        {% is_overdue obj.cutoff_set.first.dry_date as isOver %}
+                        <td {{isOver}} ><b>{{ obj.cutoff_set.first.dry_date|date:"d/m H:i" }}</b></td>
+                      {% else %}
+                        {% decrease_hour obj.etb 24 as delete_24 %}
+                        {% is_overdue delete_24 as isOver %}
+                        <td {{isOver}}>{{ delete_24|date:"d/m H:i"}} </td>
+                      {% endif %}
+                     
+                    {% endif %}
+                  
+          
+                    <!-- Reef -->
+                    {% if not obj.has_cutoff %}
+                        {% if IsCutOff %}
+                          {% get_fix_cutoff obj.service obj.etb  as NewCutDate %}
+                          <!-- {{ NewCutDate|date:"d/m H:i"}} -->
+                          {% is_overdue NewCutDate as isOver %}
+                          <td {{isOver}} >{{ NewCutDate|date:"d/m H:i"}}</td>
+                        {% else %}
+                          {% decrease_hour obj.etb 12 as delete_12 %}
+                          <!-- {{ delete_12|date:"d/m H:i"}} -->
+                          {% is_overdue delete_12 as isOver %}
+                          <td {{isOver}} >{{ delete_12|date:"d/m H:i"}}</td>
+                        {% endif %}
+                    {% else %}
+                        <!-- New value from CutOff -->
+                        {% if obj.cutoff_set.first.reef_date %}
+                          {% is_overdue obj.cutoff_set.first.reef_date as isOver %}
+                           <td {{isOver}} ><b>{{ obj.cutoff_set.first.reef_date|date:"d/m H:i" }}</b></td>
+                        {% else %}
+                          {% decrease_hour obj.etb 12 as delete_12 %}
+                          <!-- {{ delete_12|date:"d/m H:i"}} -->
+                          {% is_overdue delete_12 as isOver %}
+                          <td {{isOver}}>{{ delete_12|date:"d/m H:i"}} </td>
+                        {% endif %}
+                    {% endif %}
+               
+                  <!-- Chill -->
+      
+                    {% if not obj.has_cutoff %}
+                        {% decrease_hour obj.etb 1 as delete_1 %}
+                        <!-- {{ delete_1|date:"d/m H:i"}} -->
+                        {% is_overdue delete_1 as isOver %}
+                        <td {{isOver}} >{{ delete_1|date:"d/m H:i"}}</td>
+                    {% else %}
+                        <!-- New value from CutOff -->
+                        {% if obj.cutoff_set.first.chilled_date %}
+                          {% is_overdue obj.cutoff_set.first.chilled_date as isOver %}
+                          <td {{isOver}} ><b>{{ obj.cutoff_set.first.chilled_date|date:"d/m H:i" }}</b></td>
+                        {% else %}
+                          {% decrease_hour obj.etb 1 as delete_1 %}
+                           {% is_overdue delete_1 as isOver %}
+                           <td {{isOver}} >{{ delete_1|date:"d/m H:i"}}</td>
+                        {% endif %}
+                    {% endif %}
+
+                  <!-- ETB -->
+                  
+                    {% is_overdue obj.etb as isOver %}
+                    <td {{isOver}} >{{ obj.etb|date:"d/m H:i"}}</td>
+                
+                  <!-- Durian / Longan -->
+               
+                    {% if not obj.has_cutoff %}
+                      {% increase_hour obj.etb 1 as increase_1 %}
+                      {% is_overdue increase_1 as isOver %}
+                      <td {{isOver}} >{{ increase_1|date:"d/m H:i"}}</td>
+                    {% else %}
+                        <!-- New value from CutOff -->
+                      {% if obj.cutoff_set.first.durian_date %}
+                        {% is_overdue obj.cutoff_set.first.durian_date as isOver %}
+                          <td {{isOver}} ><b>{{ obj.cutoff_set.first.durian_date|date:"d/m H:i" }}</b></td>
+                      {% else %}
+                          {% increase_hour obj.etb 1 as increase_1 %}
+                          {% is_overdue increase_1 as isOver %}
+                          <td {{isOver}} >{{ increase_1|date:"d/m H:i"}}</td>
+                      {% endif %}
+                    {% endif %}
+                  
+
+                  <!-- Status -->
+                  <td>
+                    {{IsArrive}}
+                  </td>
+                  
+                </tr>
+              {% endfor %}
+      </table>
+
+      <table class="table table-bordered">
+  
+          <tr class="active">
+        <th></th>
+        <th>Service</th>
+        <th>Vessel</th>
+        <th>Code</th>
+        <th>Voy</th>
+        <th>DRY (24HR)</th>
+        <th>REEF (12HR)</th>
+        <th>Chilled Cargo</th>
+        <th>BERTH</th>
+        <th>Durain / Longan</th>
+        <th>Status</th>
+      </tr>
+
+             {% for obj in A %}
+               {% is_fix_cutoff obj.service as IsCutOff %}
+               {% is_arrive obj.etb as IsArrive %}
+               {% cut obj.service as newService %}
+               <tr>
+                  <td>
+                  A.0
+                  </td>
+                  <td>
+                  <a href="{{ obj.get_absolute_url }}">{{ newService}}</a>
+                  </td>
+                  <td>
+                  {{ obj.vessel}}
+                  </td>
+                  <td>
+                  {{ obj.code}}
+                  </td>
+                  <td>
+                  {{ obj.voy}}
+                  </td>
+                  
+                    <!-- DRY -->
+                    {% if not obj.has_cutoff %}
+                      
+                        {% if IsCutOff %}
+                          {% get_fix_cutoff obj.service obj.etb  as NewCutDate %}
+                          {% is_overdue NewCutDate as isOver %}
+                          <td {{isOver}} >{{ NewCutDate|date:"d/m H:i"}}</td>
+                        {% else %}
+                          {% decrease_hour obj.etb 24 as delete_24 %}
+                          {% is_overdue delete_24 as isOver %}
+                          <td {{isOver}} >{{ delete_24|date:"d/m H:i"}}</td>
+                        {% endif %}
+                      
+                    {% else %}
+                      <!-- New value from CutOff -->
+                      
+                      {% if obj.cutoff_set.first.dry_date %}
+                        {% is_overdue obj.cutoff_set.first.dry_date as isOver %}
+                        <td {{isOver}} ><b>{{ obj.cutoff_set.first.dry_date|date:"d/m H:i" }}</b></td>
+                      {% else %}
+                        {% decrease_hour obj.etb 24 as delete_24 %}
+                        {% is_overdue delete_24 as isOver %}
+                        <td {{isOver}}>{{ delete_24|date:"d/m H:i"}} </td>
+                      {% endif %}
+                     
+                    {% endif %}
+                  
+          
+                    <!-- Reef -->
+                    {% if not obj.has_cutoff %}
+                        {% if IsCutOff %}
+                          {% get_fix_cutoff obj.service obj.etb  as NewCutDate %}
+                          <!-- {{ NewCutDate|date:"d/m H:i"}} -->
+                          {% is_overdue NewCutDate as isOver %}
+                          <td {{isOver}} >{{ NewCutDate|date:"d/m H:i"}}</td>
+                        {% else %}
+                          {% decrease_hour obj.etb 12 as delete_12 %}
+                          <!-- {{ delete_12|date:"d/m H:i"}} -->
+                          {% is_overdue delete_12 as isOver %}
+                          <td {{isOver}} >{{ delete_12|date:"d/m H:i"}}</td>
+                        {% endif %}
+                    {% else %}
+                        <!-- New value from CutOff -->
+                        {% if obj.cutoff_set.first.reef_date %}
+                          {% is_overdue obj.cutoff_set.first.reef_date as isOver %}
+                           <td {{isOver}} ><b>{{ obj.cutoff_set.first.reef_date|date:"d/m H:i" }}</b></td>
+                        {% else %}
+                          {% decrease_hour obj.etb 12 as delete_12 %}
+                          <!-- {{ delete_12|date:"d/m H:i"}} -->
+                          {% is_overdue delete_12 as isOver %}
+                          <td {{isOver}}>{{ delete_12|date:"d/m H:i"}} </td>
+                        {% endif %}
+                    {% endif %}
+               
+                  <!-- Chill -->
+      
+                    {% if not obj.has_cutoff %}
+                        {% decrease_hour obj.etb 1 as delete_1 %}
+                        <!-- {{ delete_1|date:"d/m H:i"}} -->
+                        {% is_overdue delete_1 as isOver %}
+                        <td {{isOver}} >{{ delete_1|date:"d/m H:i"}}</td>
+                    {% else %}
+                        <!-- New value from CutOff -->
+                        {% if obj.cutoff_set.first.chilled_date %}
+                          {% is_overdue obj.cutoff_set.first.chilled_date as isOver %}
+                          <td {{isOver}} ><b>{{ obj.cutoff_set.first.chilled_date|date:"d/m H:i" }}</b></td>
+                        {% else %}
+                          {% decrease_hour obj.etb 1 as delete_1 %}
+                           {% is_overdue delete_1 as isOver %}
+                           <td {{isOver}} >{{ delete_1|date:"d/m H:i"}}</td>
+                        {% endif %}
+                    {% endif %}
+
+                  <!-- ETB -->
+                  
+                    {% is_overdue obj.etb as isOver %}
+                    <td {{isOver}} >{{ obj.etb|date:"d/m H:i"}}</td>
+                
+                  <!-- Durian / Longan -->
+               
+                    {% if not obj.has_cutoff %}
+                      {% increase_hour obj.etb 1 as increase_1 %}
+                      {% is_overdue increase_1 as isOver %}
+                      <td {{isOver}} >{{ increase_1|date:"d/m H:i"}}</td>
+                    {% else %}
+                        <!-- New value from CutOff -->
+                      {% if obj.cutoff_set.first.durian_date %}
+                        {% is_overdue obj.cutoff_set.first.durian_date as isOver %}
+                          <td {{isOver}} ><b>{{ obj.cutoff_set.first.durian_date|date:"d/m H:i" }}</b></td>
+                      {% else %}
+                          {% increase_hour obj.etb 1 as increase_1 %}
+                          {% is_overdue increase_1 as isOver %}
+                          <td {{isOver}} >{{ increase_1|date:"d/m H:i"}}</td>
+                      {% endif %}
+                    {% endif %}
+                  
+
+                  <!-- Status -->
+                  <td>
+                    {{IsArrive}}
+                  </td>
+                  
+                </tr>
+              {% endfor %}
+      </table>
+      <i>Main berth schedule last update on :</i>
+              <!-- End Parameter-->
+</div>
+{% endblock form_content %}

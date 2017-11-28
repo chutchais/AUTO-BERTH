@@ -41,8 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'berth',
     'vessel',
-    'pdfdocument'
-]
+    ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -55,6 +54,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'autoberth.urls'
+LOGIN_URL = '/login/'
 
 TEMPLATES = [
     {

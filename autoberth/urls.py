@@ -18,11 +18,13 @@ from django.contrib import admin
 from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.conf import settings
+from django.contrib.auth.views import LoginView
 
 urlpatterns = [
     url(r'^$', include('berth.urls')),
     url(r'^admin/', admin.site.urls),
-    url(r'^berth/', include('berth.urls')),
+    url(r'^login/', LoginView.as_view(),name='login'),
+    url(r'^berth/', include('berth.urls', namespace='berth')),
     url(r'api/voy/', include("berth.api.urls", namespace='voy-api')),
     url(r'api/vessel/', include("vessel.api.urls", namespace='vessel-api')),
 ]
