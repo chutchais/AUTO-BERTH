@@ -112,6 +112,7 @@ def foo(year, week):
 
 def cutoff(request):
 	from django.db.models import Q
+	from django.db.models import Max
 	# from datetime import datetime
 	import datetime
 	from datetime import timedelta
@@ -151,13 +152,14 @@ def cutoff(request):
 			service__name__icontains='DIS'
 		).order_by('etb')
 
-	# last = Voy.objects.filter(
-	# 	Q(etb__range=[from_date,to_date]),
-	# 	vessel__v_type='VESSEL',
-	# 	draft=False).exclude(service__name__icontains='DIS').order_by('etb').aggregate(Max('price'))
+	lastupdate = Voy.objects.filter(
+		Q(etb__range=[from_date,to_date]),
+		vessel__v_type='VESSEL',
+		draft=False).exclude(service__name__icontains='DIS').order_by('etb').aggregate(Max('modified_date'))
 	
 
 	return render(request, 'cutoff.html', {'A':a,
 						'B':b,
 						'year':year,
-						'week':workweek})
+						'week':workweek,
+						'lastupdate':lastupdate})

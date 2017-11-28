@@ -42,11 +42,23 @@ def is_fix_cutoff(service):
 def is_overdue(perform_date):
 	import datetime
 	now = datetime.datetime.now()
-	# print (now)
-	# return True
+
 	if perform_date < now:
-		# print ('Over')
+		# print((now-perform_date).total_seconds()/60)
 		return 'class=danger'
+	# else:
+	# 	minutediff = (perform_date-now).total_seconds()/60
+	# 	return 'class=alert-warning' if minutediff <60 else ''
+
+@register.assignment_tag
+def is_overhour(etb_date,perform_date):
+	if etb_date > perform_date:
+		minutediff = (etb_date-perform_date).total_seconds()/60
+	else:
+		minutediff = (perform_date-etb_date).total_seconds()/60
+
+	return 'class=alert-warning' if minutediff > (24*60) else ''
+
 
 @register.assignment_tag
 def set_to_Saturday(service,perform_date):
