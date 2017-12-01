@@ -27,7 +27,7 @@ urlpatterns = [
     url(r'^berth/', include('berth.urls', namespace='berth')),
     url(r'api/voy/', include("berth.api.urls", namespace='voy-api')),
     url(r'api/vessel/', include("vessel.api.urls", namespace='vessel-api')),
-]
+]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 
 if settings.DEBUG:
