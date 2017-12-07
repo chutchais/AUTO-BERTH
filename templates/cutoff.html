@@ -36,7 +36,7 @@
 
              {% for obj in B %}
                {% is_fix_cutoff obj.service as IsCutOff %}
-               {% is_arrive obj.etb as IsArrive %}
+               {% is_arrive obj.etb obj.etd as IsArrive %}
                {% cut obj.service as newService %}
                <tr>
                   <td>
@@ -182,7 +182,7 @@
              
              
                {% is_fix_cutoff obj.service as IsCutOff %}
-               {% is_arrive obj.etb as IsArrive %}
+               {% is_arrive obj.etb obj.etd as IsArrive %}
                {% cut obj.service as newService %}
                <tr>
                   <td>

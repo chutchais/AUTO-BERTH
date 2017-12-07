@@ -23,8 +23,10 @@ def cut(service):
 
 
 @register.assignment_tag
-def is_arrive(etb):
+def is_arrive(etb,etd):
 	if etb < datetime.datetime.now():
+		if etd < datetime.datetime.now():
+			return 'Departed'
 		return 'Arrived'
 	else:
 		return '...'
