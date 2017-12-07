@@ -158,7 +158,7 @@
                   <td {{isOver24}}>
                     {{IsArrive}}
                   </td>
-                  
+
                 </tr>
               {% endfor %}
 <!--       </table>
@@ -176,10 +176,11 @@
         <th>Chilled Cargo</th>
         <th>BERTH</th>
         <th>Durain / Longan</th>
-        <th>Status</th>
       </tr>
 
              {% for obj in A %}
+             
+             
                {% is_fix_cutoff obj.service as IsCutOff %}
                {% is_arrive obj.etb as IsArrive %}
                {% cut obj.service as newService %}
@@ -304,7 +305,7 @@
 
                     {{IsArrive}}
                   </td>
-                  
+
                 </tr>
               {% endfor %}
       </table>

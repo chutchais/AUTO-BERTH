@@ -283,6 +283,7 @@ class cutoff(models.Model):
 	created_date = models.DateTimeField(auto_now_add=True)
 	modified_date = models.DateTimeField(blank=True, null=True,auto_now=True)
 	user = models.ForeignKey('auth.User',blank=True,null=True)
+	remark = models.TextField(max_length=255,blank=True, null=True)
 
 	def __str__(self):
 		return ('%s' % (self.voy))

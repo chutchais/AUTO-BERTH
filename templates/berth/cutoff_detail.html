@@ -18,21 +18,25 @@
 				</h3>
 				<table class="table table-bordered">
 				      <tr>
-				        <th>Name</th>
-				        <th>Cut-off datetime</th>
+				        <th>Remark</th>
+				        <th>Dry</th>
+				        <th>Reef</th>
+				        <th>Chilled</th>
+				        <th>Durian/Longan</th>
+				        <th></th>
 				      </tr>
-				
+
+					
 					 <tr>
+					 	<td><h3>{{ object.remark }}</h3></td>
 					 	<td>Dry</td><td>{{ object.dry_date }}</td>
-					 </tr>
-					 <tr>
-					 	<td>Reef</td><td>{{ object.reef_date }}</td>
-					 </tr>
-					 <tr>
+					  	<td>Reef</td><td>{{ object.reef_date }}</td>
 					 	<td>Chilled</td><td>{{ object.chilled_date }}</td>
-					 </tr>
-					 <tr>
 					 	<td>Durian/Longan</td><td>{{ object.durian_date }}</td>
+					  	
+					  	<td><small><a href="{{object.get_absolute_url }}">edit</a></small>
+						<small><a href="{{ object.get_absolute_url}}delete/">delete</a></small></td>
+					 </tr>
 
 				</table>
 	</div>

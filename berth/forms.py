@@ -4,10 +4,18 @@ from .models import cutoff,Voy
 class CutoffForm(ModelForm):
 	class Meta:
 		model = cutoff
-		fields = ['voy','dry_date','reef_date','chilled_date','durian_date']
+		fields = ['dry_date','reef_date','chilled_date','durian_date','remark']
 
 	def __init__(self,voy=None,*args,**kwargs):
-		print (voy)
+		# voy = kwargs.pop('voy')
+		# print(voy_slug)
+		# print (voy)
 		print (kwargs)
+		# voy = kwargs.pop('voy')
 		super(CutoffForm,self).__init__(*args,**kwargs)
-		# self.fields['voy'] = Voy.objects.all()
+		# self.fields['voy'].queryset = Voy.objects.all()
+
+	# def __init__(self, *args, **kwargs):
+	# 	user = kwargs.pop('user')
+	# 	super(FolderForm, self).__init__(*args, **kwargs)
+	# 	self.fields['parent'].queryset = Folder.objects.filter(user=user)

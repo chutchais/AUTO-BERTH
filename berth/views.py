@@ -42,16 +42,20 @@ class CutOffCreateView(LoginRequiredMixin,CreateView):
 	form_class = CutoffForm
 
 	def form_valid(self,form):
+		voy = get_object_or_404(Voy, slug=self.kwargs.get('slug'))
+		form.instance.voy = voy
 		obj = form.save(commit=False)
 		return super(CutOffCreateView,self).form_valid(form)
 
-	def get_initial(self):
-		voy = get_object_or_404(Voy, slug=self.kwargs.get('slug'))
-		return {'voy':voy}
+	# def get_initial(self):
+	# 	# print ('get_initial %s' % self.kwargs)
+	# 	voy = get_object_or_404(Voy, slug=self.kwargs.get('slug'))
+	# 	return {'voy':voy}
 
 	def get_form_kwargs(self):
 		kwargs = super(CutOffCreateView,self).get_form_kwargs()
 		# kwargs['instance'] = Item.objects.filter(user=self.request.user).first()
+		# print ('Kwarg %s' % self.request)
 		return kwargs
 
 	# # def get_queryset(self):
@@ -63,11 +67,28 @@ class CutOffCreateView(LoginRequiredMixin,CreateView):
 	def get_context_data(self,*args,**kwargs):
 		context = super(CutOffCreateView,self).get_context_data(*args,**kwargs)
 		context['title']='Add Cut-Off Datetime'
+		# context['voy']= 'Add Cut-Off Datetime'
 		return context
 
 class CutOffDeleteView(LoginRequiredMixin,DeleteView):
 	model = cutoff
 	success_url = reverse_lazy('berth:cutoff-home')
+
+	def get_object(self, queryset=None):
+		obj = super(CutOffDeleteView, self).get_object()
+		# print ('Delete %s' % obj)
+		return obj
+
+	def get_success_url(self):
+	# Assuming there is a ForeignKey from Comment to Post in your model
+		voy = self.object.voy 
+		print (voy)
+		return reverse_lazy( 'berth:voy-detail', kwargs={'slug': voy.slug})
+
+	# def get_form_kwargs(self):
+	# 	kwargs = super(CutOffDeleteView,self).get_form_kwargs()
+	# 	print('Kwargs %s' % kwargs)
+	# 	return kwargs
 
 
 # def xls_to_response(xls, fname):
