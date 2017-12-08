@@ -173,11 +173,20 @@ def cutoff(request):
 			service__name__icontains='DIS'
 		).order_by('etb')
 
-	lastupdate = Voy.objects.filter(
+	# lastupdate = Voy.objects.filter(
+	# 	Q(etb__range=[from_date,to_date]),
+	# 	vessel__v_type='VESSEL',
+	# 	draft=False).exclude(service__name__icontains='DIS').order_by('etb').aggregate(Max('modified_date'))
+
+	c = Voy.objects.filter(
 		Q(etb__range=[from_date,to_date]),
+		Q(terminal='B1')|
+		Q(terminal__name__icontains='A'),
 		vessel__v_type='VESSEL',
-		draft=False).exclude(service__name__icontains='DIS').order_by('etb').aggregate(Max('modified_date'))
-	
+		draft=False).exclude(service__name__icontains='DIS').order_by('-modified_date')
+
+	lastupdate = c.first()
+	print ('Last update %s' % lastupdate)
 
 	return render(request, 'cutoff.html', {'A':a,
 						'B':b,

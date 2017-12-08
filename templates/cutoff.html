@@ -572,7 +572,9 @@
                     <!-- End Show Second CutOff -->
               {% endfor %}
       </table>
-      <i>Main berth schedule last update on : {{lastupdate.modified_date__max}} - {{lastupdate.modified_date__max|timesince}} ago</i>
+      <i>Main berth schedule last update on : {{lastupdate.modified_date}} - {{lastupdate.modified_date|timesince}} ago
+         , vessel: {{lastupdate.vessel}} - code: {{lastupdate.code}} - voy: {{lastupdate.voy}}
+      </i>
               <!-- End Parameter-->
 </div>
 {% endblock form_content %}
