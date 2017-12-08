@@ -29,10 +29,17 @@ class VoyListAPIView(ListAPIView):
 		queryset_list = Voy.objects.all()
 		from_date = self.request.GET.get("f")
 		to_date = self.request.GET.get("t")
+		terminal = self.request.GET.get("terminal")
 		print ('From : %s  -- To : %s ' % (from_date,to_date))
-		queryset_list = Voy.objects.filter(
+		print ('Terminal %s' % terminal)
+		if terminal :
+			queryset_list = Voy.objects.filter(
 				Q(etb__range=[from_date,to_date])|
-				Q(etd__range=[from_date,to_date])).order_by('etb')
+				Q(etd__range=[from_date,to_date]),terminal__name__icontains=terminal).order_by('etb')
+		else:
+			queryset_list = Voy.objects.filter(
+					Q(etb__range=[from_date,to_date])|
+					Q(etd__range=[from_date,to_date])).order_by('etb')
 		return queryset_list
 	# filter_backends=[SearchFilter,OrderingFilter],
 	# search_fields =['content','user__first_name']
