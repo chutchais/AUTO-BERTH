@@ -10,6 +10,7 @@
 
 
 {% block form_content %}
+<div class="container">
 	<div class="row">
 		<h3>Vesel Information : {{ object.vessel }} <small><a href="{% url 'berth:cutoff-home' %}">Home</a></small></h3>
 		 Voy      :{{ object.voy }} <br>
@@ -59,4 +60,5 @@
 		{% endif %}
 		<a href="{% url 'berth:cutoff-create' object.slug %}">Add CutOff</a>
 	</div>
+</div>
 {% endblock form_content %}

@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load system_tag %}
+
+{% block head %}
+{% endblock head %}
+
+{% block title %}
+    Berth Schedule Report
+{% endblock %}
+
+
+{% block form_content %}
+<div class="container">
+	<div class="row">
+		<h3>Vesel Information : {{ object.vessel }} <small><a href="{% url 'bayplan:index' %}">Home</a></small></h3>
+		 Voy      :{{ object.voy }} <br>
+		 Service  :{{ object.service }}<br>
+		 Terminal :{{ object.terminal }}<br>
+		 Performa - In : {{ object.performa_in }}<br>
+		 Performa - Out : {{ object.performa_out }}<br>
+		 ETA : {{ object.eta }}<br>
+		 ETB : {{ object.etb }}</h3>
+		 ETD : {{ object.etd }}<br>
+		 DIS : {{ object.dis_no }}<br>
+		 LOAD : {{ object.load_no }}<br>
+		 <hr/>
+		
+		  
+<!-- 					<small><a href="{{ object.cutoff_set.first.get_absolute_url }}">edit</a></small>
+					<small><a href="{{ object.cutoff_set.first.get_absolute_url}}delete/">delete</a></small> -->
+				
+
+		<hr/>
+
+
+		
+
+		{% if object.bayplanfile %}
+				<h3>Bay Plan file details</h3>
+				<table class="table table-bordered">
+					<tr>
+						<th>File name</th>
+						<th>#Container</th>
+				        <th>Remark</th>
+				        <th>datetime</th>
+				        <th></th>
+				        <th></th>
+				        <th></th>
+				        <th></th>
+				      </tr>
+
+					<tr>
+					
+						<td><a href="{% url 'container:bay' object.bayplanfile.slug %}">{{ object.bayplanfile.filename|filename }}</a></td>
+						<td>{{ object.bayplanfile.container_set.count }}</td>
+					 	<td>{{ object.bayplanfile.remark }}</td>
+					 	<td>{{ object.bayplanfile.created_date }}</td>
+					 	<td><a href="{% url 'bayplan:edit' object.bayplanfile.slug %}">Edit</a></td>
+					 	<td><a href="{% url 'bayplan:delete' object.bayplanfile.slug %}">Delete</a></td>
+					 	<td><a href="{{ object.bayplanfile.filename.url}}"> Download file</a></td>
+					 	<td>
+					 		{% if object.bayplanfile.container_set.count == 0 %}
+					 		<a href="{% url 'container:process' object.bayplanfile.slug %}">Start Process</a>
+					 		{% endif %}
+					 	</td>
+					 </tr>
+
+
+				</table>
+		{% else %}
+			<a href="{% url 'bayplan:create' object.slug %}">Upload Bay plan excel file</a>
+		{% endif %}
+
+		
+
+	</div>
+</div>
+{% endblock form_content %}

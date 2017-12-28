@@ -21,10 +21,12 @@ from django.conf import settings
 from django.contrib.auth.views import LoginView
 
 urlpatterns = [
-    url(r'^$', include('berth.urls')),
+    url(r'^/', include('berth.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^login/', LoginView.as_view(),name='login'),
     url(r'^berth/', include('berth.urls', namespace='berth')),
+    url(r'^bayplan/', include('bayplan.urls', namespace='bayplan')),
+    url(r'^container/', include('container.urls', namespace='container')),
     url(r'api/voy/', include("berth.api.urls", namespace='voy-api')),
     url(r'api/vessel/', include("vessel.api.urls", namespace='vessel-api')),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

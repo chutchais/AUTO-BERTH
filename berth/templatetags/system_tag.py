@@ -4,17 +4,23 @@ import datetime
 
 register = template.Library()
 
-# @register.filter(name='cut')
-# def cut(value, arg):
-#     return value.replace(arg, '')
+import os
 
-# @register.filter
-# def lower(value):
-#     return value.lower()
+@register.assignment_tag
+def combine_stowage(bay,tier,row):
+	return ('%s%s%s' % (bay,tier,row))
 
-# @register.filter
-# def in_repair(obj):
-#     return obj.all().exclude(status='CLOSED')
+@register.filter
+def in_stowage(obj, stowage):
+    return obj.filter(stowage = stowage)
+
+@register.filter
+def in_bay(obj, bay):
+    return obj.filter(bay__startswith =bay)
+
+@register.filter
+def filename(value):
+    return os.path.basename(value.file.name)
 
 
 @register.assignment_tag

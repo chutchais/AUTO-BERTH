@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'berth',
     'vessel',
+    'bayplan',
+    'container'
     ]
 
 MIDDLEWARE = [

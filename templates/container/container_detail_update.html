@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load system_tag %}
+
+{% block head %}
+{% endblock head %}
+
+{% block title %}
+    Berth Schedule Report
+{% endblock %}
+
+
+{% block form_content %}
+<div class="container">
+	<div class="row">
+		
+	<h1>{{object.container}} on slot {{object.stowage}}</h1>
+	<hr/>
+	
+	{% if object.original_stowage != object.stowage %}
+	<h3>Original Slot : {{ object.original_stowage }} 
+		<small><i>-- last modify : {{ object.modified_date }}</i>
+		| <a href="{% url 'container:stowage-restore' object.slug  %}?q={{ object.container }}">Move back to original slot</a>
+		</small>
+	</h3>
+	<hr/>
+	{% endif %}
+
+	<h3>Change to new Slot </h3>
+	{% include 'snippets/form_snippet.html' with form=form %}
+	
+	{% if request.GET.mode == 'search' %} 
+		<a href="{% url 'container:bay' object.bayplanfile.slug %}?q={{ request.GET.q }}">cancel</a>
+	{% else %}
+		<a href="{% url 'container:detail' object.bayplanfile.slug object.bay %}">cancel</a>
+	{% endif%}
+	<!-- BayReport,bay -->
+	</div>
+</div>
+{% endblock form_content %}

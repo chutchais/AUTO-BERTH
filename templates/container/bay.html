@@ -1,0 +1,281 @@
+{% extends "base.html" %}
+{% load system_tag %}
+
+{% block head %}
+{% endblock head %}
+
+{% block title %}
+    Berth Schedule Report
+{% endblock %}
+
+
+{% block form_content %}
+<div class="container">
+	<div class="row">
+		<h3>Bay Information : {{ bayfile.voy }} <small><a href="{% url 'bayplan:voy-detail' bayfile.voy.slug %}">back</a></small></h3>
+
+		<form class='form' method='GET' action='.'>
+			<input type='text' placeholder="Search container.." name="q" value='{{ request.GET.q}}'>
+			<button class='btn btn-default' type='submit'>Search</button>
+			<a href="{% url 'container:bay' bayfile.slug %}">Clear result</a>
+		</form>
+
+
+		<hr/>
+
+		{% if container_list %}
+			<div class="col-xs-6 col-sm-6">
+				<h3>Search result of {{ request.GET.q}}</h3>
+				<table class="table table-bordered">
+					<tr>
+				        <th>Container</th>
+				        <th>Current Slot</th>
+				        <th>Original Slot</th>
+				        <th></th>
+				      </tr>
+				      {% for obj in container_list %}
+					<tr>
+						<td><a href="{% url 'container:detail' bayfile.slug obj.bay %}?q={{obj.container}}">{{obj.container}}</a></td>
+						<td>{{obj.stowage}}</td>
+						<td>{{obj.original_stowage}}
+							{% if obj.stowage != obj.original_stowage %}
+							<small>
+								<a href="{% url 'container:stowage-restore' obj.slug  %}?q={{ request.GET.q }}&mode=search">restore</a>
+							</small>
+							{% endif %}
+						</td>
+						<td><a href="{{ obj.get_absolute_url }}?mode=search&q={{ request.GET.q }}">Change slot</a></td>
+					 </tr>
+					 {% endfor %}
+				</table>
+			</div>
+		{% endif %}
+
+		{% if bays %}
+		<div class="col-xs-3 col-sm-3">
+				<h3>Bay 1</h3>
+				<table class="table table-bordered">
+					<tr>
+						<th>#Bay</th>
+				        <th>Container</th>
+				        <th>Change Slot</th>
+				      </tr>
+				      {% for obj in bays|in_bay:'1' %}
+					<tr>
+						<td><a href="{% url 'container:detail' bayfile.slug obj.bay %}">{{obj.bay}}</a></td>
+						<td>{{obj.number}}</td>
+						{% if obj.move %}
+							<td>{{obj.move}}</td>
+						{% else %}
+							<td></td>
+						{% endif %}
+					 </tr>
+					 {% endfor %}
+				</table>
+			</div>
+
+		<div class="col-xs-3 col-sm-3">
+				<h3>Bay 2</h3>
+				<table class="table table-bordered">
+					<tr>
+						<th>#Bay</th>
+				        <th>Container</th>
+				        <th>Change Slot</th>
+				      </tr>
+				      {% for obj in bays|in_bay:'2' %}
+					<tr>
+						<td><a href="{% url 'container:detail' bayfile.slug obj.bay %}">{{obj.bay}}</a></td>
+						<td>{{obj.number}}</td>
+						{% if obj.move %}
+							<td>{{obj.move}}</td>
+						{% else %}
+							<td></td>
+						{% endif %}
+					 </tr>
+					 {% endfor %}
+				</table>
+		</div>
+
+
+		<div class="col-xs-3 col-sm-3">
+				<h3>Bay 3</h3>
+				<table class="table table-bordered">
+					<tr>
+						<th>#Bay</th>
+				        <th>Container</th>
+				        <th>Change Slot</th>
+				      </tr>
+				      {% for obj in bays|in_bay:'3' %}
+					<tr>
+						<td><a href="{% url 'container:detail' bayfile.slug obj.bay %}">{{obj.bay}}</a></td>
+						<td>{{obj.number}}</td>
+						{% if obj.move %}
+							<td>{{obj.move}}</td>
+						{% else %}
+							<td></td>
+						{% endif %}
+					 </tr>
+					 {% endfor %}
+				</table>
+		</div>
+
+		<div class="col-xs-3 col-sm-3">
+				<h3>Bay 4</h3>
+				<table class="table table-bordered">
+					<tr>
+						<th>#Bay</th>
+				        <th>Container</th>
+				        <th>Change Slot</th>
+				      </tr>
+				      {% for obj in bays|in_bay:'4' %}
+					<tr>
+						<td><a href="{% url 'container:detail' bayfile.slug obj.bay %}">{{obj.bay}}</a></td>
+						<td>{{obj.number}}</td>
+						{% if obj.move %}
+							<td>{{obj.move}}</td>
+						{% else %}
+							<td></td>
+						{% endif %}
+					 </tr>
+					 {% endfor %}
+				</table>
+		</div>
+
+		<div class="col-xs-3 col-sm-3">
+				<h3>Bay 5</h3>
+				<table class="table table-bordered">
+					<tr>
+						<th>#Bay</th>
+				        <th>Container</th>
+				        <th>Change Slot</th>
+				      </tr>
+				      {% for obj in bays|in_bay:'5' %}
+					<tr>
+						<td><a href="{% url 'container:detail' bayfile.slug obj.bay %}">{{obj.bay}}</a></td>
+						<td>{{obj.number}}</td>
+						{% if obj.move %}
+							<td>{{obj.move}}</td>
+						{% else %}
+							<td></td>
+						{% endif %}
+					 </tr>
+					 {% endfor %}
+				</table>
+			</div>
+
+		<div class="col-xs-3 col-sm-3">
+				<h3>Bay 6</h3>
+				<table class="table table-bordered">
+					<tr>
+						<th>#Bay</th>
+				        <th>Container</th>
+				        <th>Change Slot</th>
+				      </tr>
+				      {% for obj in bays|in_bay:'6' %}
+					<tr>
+						<td><a href="{% url 'container:detail' bayfile.slug obj.bay %}">{{obj.bay}}</a></td>
+						<td>{{obj.number}}</td>
+						{% if obj.move %}
+							<td>{{obj.move}}</td>
+						{% else %}
+							<td></td>
+						{% endif %}
+					 </tr>
+					 {% endfor %}
+				</table>
+		</div>
+
+
+		<div class="col-xs-3 col-sm-3">
+				<h3>Bay 7</h3>
+				<table class="table table-bordered">
+					<tr>
+						<th>#Bay</th>
+				        <th>Container</th>
+				        <th>Change Slot</th>
+				      </tr>
+				      {% for obj in bays|in_bay:'7' %}
+					<tr>
+						<td><a href="{% url 'container:detail' bayfile.slug obj.bay %}">{{obj.bay}}</a></td>
+						<td>{{obj.number}}</td>
+						{% if obj.move %}
+							<td>{{obj.move}}</td>
+						{% else %}
+							<td></td>
+						{% endif %}
+					 </tr>
+					 {% endfor %}
+				</table>
+		</div>
+
+		<div class="col-xs-3 col-sm-3">
+				<h3>Bay 8</h3>
+				<table class="table table-bordered">
+					<tr>
+						<th>#Bay</th>
+				        <th>Container</th>
+				        <th>Change Slot</th>
+				      </tr>
+				      {% for obj in bays|in_bay:'8' %}
+					<tr>
+						<td><a href="{% url 'container:detail' bayfile.slug obj.bay %}">{{obj.bay}}</a></td>
+						<td>{{obj.number}}</td>
+						{% if obj.move %}
+							<td>{{obj.move}}</td>
+						{% else %}
+							<td></td>
+						{% endif %}
+					 </tr>
+					 {% endfor %}
+				</table>
+		</div>
+		
+		<div class="col-xs-3 col-sm-3">
+				<h3>Bay 9</h3>
+				<table class="table table-bordered">
+					<tr>
+						<th>#Bay</th>
+				        <th>Container</th>
+				        <th>Change Slot</th>
+				      </tr>
+				      {% for obj in bays|in_bay:'9' %}
+					<tr>
+						<td><a href="{% url 'container:detail' bayfile.slug obj.bay %}">{{obj.bay}}</a></td>
+						<td>{{obj.number}}</td>
+						{% if obj.move %}
+							<td>{{obj.move}}</td>
+						{% else %}
+							<td></td>
+						{% endif %}
+					 </tr>
+					 {% endfor %}
+				</table>
+		</div>
+
+	</div>
+<hr>
+	<div class="row">
+		<div class="col-xs-3 col-sm-3">
+				<h3>Duplicated Slot</h3>
+				<table class="table table-bordered">
+					<tr>
+						<th>#Slot</th>
+				        <th>#Container</th>
+				     
+				      </tr>
+				      {% for obj in dups %}
+					<tr>
+						<td><a href="{% url 'container:detail' bayfile.slug obj.bay %}">{{obj.stowage}}</a></td>
+						<td>{{obj.number}}</td>
+						
+					 </tr>
+					 {% endfor %}
+				</table>
+		</div>
+	</div>
+	{% endif %}
+
+
+
+</div>
+{% endblock form_content %}
