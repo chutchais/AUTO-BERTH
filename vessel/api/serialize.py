@@ -36,14 +36,22 @@ class VesselSerializer(ModelSerializer):
 	# 	return obj.vessel.color
 
 
-
 class VesselDetailSerializer(ModelSerializer):
-	color = SerializerMethodField()
+	# color = SerializerMethodField()
 	class Meta:
 		model = Vessel
 		# fields ='__all__'
-		fields =['name','slug','description','lov','imo','color','v_type','status']
+		fields =['name','slug','description','lov','imo','v_type','status']
 
-	def get_color(self,obj):
-		return obj.color
+	# def get_color(self,obj):
+	# 	return obj.colo
+# class VesselDetailSerializer(ModelSerializer):
+# 	color = SerializerMethodField()
+# 	class Meta:
+# 		model = Vessel
+# 		# fields ='__all__'
+# 		fields =['name','slug','description','lov','imo','color','v_type','status']
+
+# 	def get_color(self,obj):
+# 		return obj.color
 

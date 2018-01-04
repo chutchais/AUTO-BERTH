@@ -1,0 +1,60 @@
+On branch master
+Your branch is up-to-date with 'origin/master'.
+Changes to be committed:
+  (use "git reset HEAD <file>..." to unstage)
+
+	modified:   autoberth/settings.py
+	modified:   autoberth/urls.py
+	new file:   bayplan/__init__.py
+	new file:   bayplan/admin.py
+	new file:   bayplan/apps.py
+	new file:   bayplan/forms.py
+	new file:   bayplan/migrations/0001_initial.py
+	new file:   bayplan/migrations/0002_auto_20171225_1128.py
+	new file:   bayplan/migrations/0003_container.py
+	new file:   bayplan/migrations/0004_auto_20171225_1608.py
+	new file:   bayplan/migrations/0005_auto_20171225_1642.py
+	new file:   bayplan/migrations/__init__.py
+	new file:   bayplan/models.py
+	new file:   bayplan/tests.py
+	new file:   bayplan/urls.py
+	new file:   bayplan/views.py
+	modified:   berth/templatetags/system_tag.py
+	new file:   container/__init__.py
+	new file:   container/admin.py
+	new file:   container/admins.py
+	new file:   container/apps.py
+	new file:   container/forms.py
+	new file:   container/migrations/0001_initial.py
+	new file:   container/migrations/0002_auto_20171226_1118.py
+	new file:   container/migrations/0003_container_slug.py
+	new file:   container/migrations/0004_auto_20171228_1132.py
+	new file:   container/migrations/__init__.py
+	new file:   container/models.py
+	new file:   container/tests.py
+	new file:   container/urls.py
+	new file:   container/views.py
+	modified:   templates/base.html
+	new file:   templates/bayplan/bayplan_detail_update.html
+	new file:   templates/bayplan/bayplan_index.html
+	new file:   templates/bayplan/bayplan_voy_detail.html
+	new file:   templates/bayplan/bayplanfile_confirm_delete.html
+	modified:   templates/berth/cutoff_confirm_delete.html
+	modified:   templates/berth/cutoff_detail.html
+	modified:   templates/berth/cutoff_detail_update.html
+	modified:   templates/berth/voy_detail.html
+	new file:   templates/container/bay.html
+	new file:   templates/container/bay_detail.html
+	new file:   templates/container/container_detail.html
+	new file:   templates/container/container_detail_update.html
+	new file:   templates/container/container_list.html
+	modified:   templates/cutoff.html
+	modified:   templates/form.html
+	modified:   templates/registration/login.html
+	modified:   templates/snippets/form_snippet.html
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+	logs.txt
+

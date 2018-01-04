@@ -4,6 +4,7 @@ from django.shortcuts import render
 # from pdfdocument.utils import pdf_response 
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.http import HttpResponse
+from django.core.urlresolvers import reverse
 import os.path
 from django.conf import settings
 
@@ -57,6 +58,14 @@ class BayPlanCreateView(LoginRequiredMixin,CreateView):
 		# kwargs['instance'] = Item.objects.filter(user=self.request.user).first()
 		# print ('Kwarg %s' % self.request)
 		return kwargs
+
+	def get_success_url(self,*args, **kwargs):
+		slug =self.object.voy.slug
+		print(slug)
+		url = reverse('bayplan:voy-detail',kwargs={'slug':slug})
+		return url
+		# reverse_lazy('container:detail',kwargs={'slug':slug,'bay':bay},query={'q':self.object.container})
+		# return reverse(url)
 
 
 	def get_queryset(self):

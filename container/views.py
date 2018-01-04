@@ -85,9 +85,10 @@ class ContainerListView(LoginRequiredMixin,ListView):
 	# 	slug = self.kwargs['slug']
 	# 	return Container.objects.filter(bayplanfile__slug = slug)
 
-def BayRestore(request,slug):
+def ContainerRestore(request,slug):
 	if not request.user.is_authenticated:
 		return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
+
 	c = Container.objects.get(slug=slug)
 	c.stowage = c.original_stowage
 	c.bay = c.original_bay
@@ -105,6 +106,34 @@ def BayRestore(request,slug):
 	else:
 		url = reverse('container:detail',kwargs={'slug':slug,'bay':bay})
 		url = '%s?q=%s' % (url , c.container)
+
+	return HttpResponseRedirect(url)
+
+def BayRestore(request,slug,bay):
+	if not request.user.is_authenticated:
+		return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
+
+
+	container_list = Container.objects.filter(bayplanfile__slug=slug,bay=bay)
+	for  c in container_list:
+		if c.stowage != c.original_stowage:
+			c.stowage = c.original_stowage
+			c.bay = c.original_bay
+			c.save()
+
+
+	# slug = c.bayplanfile.slug
+	# bay = c.bay
+	url = reverse('container:detail',kwargs={'slug':slug,'bay':bay})
+	print (url)
+	# mode = request.GET.get('mode')
+	# if mode=='search':
+	# 	query = request.GET.get('q')
+	# 	url = reverse('container:bay',kwargs={'slug':slug})
+	# 	url = '%s?q=%s' % (url , query)
+	# else:
+	# 	url = reverse('container:detail',kwargs={'slug':slug,'bay':bay})
+	# 	# url = '%s?q=%s' % (url , c.container)
 
 	return HttpResponseRedirect(url)
 
@@ -151,9 +180,17 @@ def BayDetail(request,slug,bay):
 	if not request.user.is_authenticated:
 		return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
 
-	query = request.GET.get('q')
+	query = request.GET.get('q',None)
 	bayfile =BayPlanFile.objects.get(slug=slug)
 	c = Container.objects.filter(bayplanfile=bayfile,bay=bay)
+	# Find changes slot
+	has_changes = False
+	b = c.exclude(stowage = F('original_stowage')).count()
+	if b > 0 :
+		has_changes = True
+	# -----------------
+
+
 	tier = tier1 #Default
 	for obj in c:
 		stack = obj.stowage[-2:]
@@ -167,6 +204,7 @@ def BayDetail(request,slug,bay):
 		'container/bay_detail.html',
 		{
 		'container_list': c,
+		'has_change' :has_changes,
 		'obj':bayfile,
 		'bay': bay,
 		'under_deck': under_deck,
@@ -216,8 +254,8 @@ def FileProcess(request,slug):
 								stowage=stowage,bay=stowage[:1] if len(stowage)==5 else stowage[:2],
 								original_stowage=stowage,original_bay=stowage[:1] if len(stowage)==5 else stowage[:2] )
 			# =============
-
-	return render(
-		request,
-		'container/container_list.html',
-		{})
+	return redirect(reverse_lazy( 'container:bay', kwargs={'slug': slug}))
+	# return render(
+	# 	request,
+	# 	'container/container_list.html',
+	# 	{})

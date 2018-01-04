@@ -13,11 +13,18 @@
 
 <div class="container-fluid">
 <div class="row">
-			
+				
+				<div>
 				<h3>Bay {{bay}}  <small> Total {{ container_list.count }} container(s) | 
 					<a href="{% url 'container:bay' container_list.first.bayplanfile.slug %}">back</a></small></h3>
+				{% if has_change %}
+				<p class="text-right"><a href='{% url "container:bay-restore" container_list.first.bayplanfile.slug container_list.first.bay %}'>Set all to original</a></p>
+				{% endif %}
+				</div>
 
 				<div>
+				
+
 				<table class="table table-bordered">
 					<!-- Under Deck -->
 

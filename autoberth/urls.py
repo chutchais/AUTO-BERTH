@@ -29,6 +29,8 @@ urlpatterns = [
     url(r'^container/', include('container.urls', namespace='container')),
     url(r'api/voy/', include("berth.api.urls", namespace='voy-api')),
     url(r'api/vessel/', include("vessel.api.urls", namespace='vessel-api')),
+    url(r'api/bayplan/', include("bayplan.api.urls", namespace='bayplan-api')),
+    url(r'api/container/', include("container.api.urls", namespace='container-api')),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 

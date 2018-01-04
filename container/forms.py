@@ -4,6 +4,11 @@ from django import forms
 import re
 
 class ContainerForm(ModelForm):
+	# bay = forms.CharField(required=False)
+	# tier = forms.CharField(required=False)
+	# row = forms.CharField(required=False)
+
+
 	class Meta:
 		model = Container
 		fields = ['stowage']
