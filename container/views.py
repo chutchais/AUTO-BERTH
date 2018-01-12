@@ -243,9 +243,16 @@ def FileProcess(request,slug):
 			delivery_port= xl_sheet.cell(row_index, 12).value.__str__().strip()
 			desc        = xl_sheet.cell(row_index, 17).value.__str__().strip()
 			stowage		= xl_sheet.cell(row_index, 26).value.__str__().strip().replace('.0','')
-			# print (item_count,vContainer,iso,full,partner,weight,load_port,dis_port,delivery_port,desc,stowage)
-			# Save to Model
-			# if item_count==1:
+
+			if load_port !='THLCH':
+				print ('Not load at LCB %s' % load_port )
+				continue
+
+			if len(stowage)==5:
+				stowage = '0%s'% stowage
+				print (stowage)
+
+
 			c = Container.objects.create(bayplanfile=bayfile,item_no=item_count,
 								container=vContainer,iso_code=iso,full=True if full=='Full' else False,
 								partner=partner,weight=weight,

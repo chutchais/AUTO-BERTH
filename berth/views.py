@@ -128,7 +128,8 @@ def pdf_view(request):
 def foo(year, week):
 	from datetime import date, timedelta
 	d = date(year,1,1)
-	dlt = timedelta(days = ((week-1)*7)+1)
+	# dlt = timedelta(days = ((week-1)*7)+1) #Fix return wrong start and stop date of WorkWeek
+	dlt = timedelta(days = ((week-1)*7))
 	return d + dlt ,  d + dlt + timedelta(days=7)
 
 def cutoff(request):
@@ -147,8 +148,10 @@ def cutoff(request):
 		to_date = from_date +  timedelta(days=7)
 		year = from_date.strftime('%Y')#-%m-%d %H:%M
 		workweek = from_date.strftime('%W')
+		print (today,from_date,to_date)
 	else:
 		# from isoweek import Week
+		print (year,workweek)
 		d = foo(int(year),int(workweek))
 		from_date = d[0]
 		to_date = d[1]

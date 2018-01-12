@@ -52,8 +52,31 @@
 		{% endif %}
 
 		{% if bays %}
+
+			<div class="col-xs-3 col-sm-3">
+				<h3>Bay 0X</h3>
+				<table class="table table-bordered">
+					<tr>
+						<th>#Bay</th>
+				        <th>Container</th>
+				        <th>Change Slot</th>
+				      </tr>
+				      {% for obj in bays|in_bay:'0' %}
+					<tr>
+						<td><a href="{% url 'container:detail' bayfile.slug obj.bay %}">{{obj.bay}}</a></td>
+						<td>{{obj.number}}</td>
+						{% if obj.move %}
+							<td>{{obj.move}}</td>
+						{% else %}
+							<td></td>
+						{% endif %}
+					 </tr>
+					 {% endfor %}
+				</table>
+			</div>
+
 		<div class="col-xs-3 col-sm-3">
-				<h3>Bay 1</h3>
+				<h3>Bay 1X</h3>
 				<table class="table table-bordered">
 					<tr>
 						<th>#Bay</th>
@@ -75,7 +98,7 @@
 			</div>
 
 		<div class="col-xs-3 col-sm-3">
-				<h3>Bay 2</h3>
+				<h3>Bay 2X</h3>
 				<table class="table table-bordered">
 					<tr>
 						<th>#Bay</th>
@@ -98,7 +121,7 @@
 
 
 		<div class="col-xs-3 col-sm-3">
-				<h3>Bay 3</h3>
+				<h3>Bay 3X</h3>
 				<table class="table table-bordered">
 					<tr>
 						<th>#Bay</th>
@@ -120,7 +143,7 @@
 		</div>
 
 		<div class="col-xs-3 col-sm-3">
-				<h3>Bay 4</h3>
+				<h3>Bay 4X</h3>
 				<table class="table table-bordered">
 					<tr>
 						<th>#Bay</th>
@@ -142,7 +165,7 @@
 		</div>
 
 		<div class="col-xs-3 col-sm-3">
-				<h3>Bay 5</h3>
+				<h3>Bay 5X</h3>
 				<table class="table table-bordered">
 					<tr>
 						<th>#Bay</th>
@@ -164,7 +187,7 @@
 			</div>
 
 		<div class="col-xs-3 col-sm-3">
-				<h3>Bay 6</h3>
+				<h3>Bay 6X</h3>
 				<table class="table table-bordered">
 					<tr>
 						<th>#Bay</th>
@@ -187,7 +210,7 @@
 
 
 		<div class="col-xs-3 col-sm-3">
-				<h3>Bay 7</h3>
+				<h3>Bay 7X</h3>
 				<table class="table table-bordered">
 					<tr>
 						<th>#Bay</th>
@@ -209,7 +232,7 @@
 		</div>
 
 		<div class="col-xs-3 col-sm-3">
-				<h3>Bay 8</h3>
+				<h3>Bay 8X</h3>
 				<table class="table table-bordered">
 					<tr>
 						<th>#Bay</th>
@@ -231,7 +254,7 @@
 		</div>
 		
 		<div class="col-xs-3 col-sm-3">
-				<h3>Bay 9</h3>
+				<h3>Bay 9X</h3>
 				<table class="table table-bordered">
 					<tr>
 						<th>#Bay</th>

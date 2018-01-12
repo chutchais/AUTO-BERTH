@@ -234,8 +234,8 @@ def create_voy_slug(instance, new_slug=None):
     qs = Voy.objects.filter(slug=slug).order_by("-id")
     exists = qs.exists()
     if exists:
-        # new_slug = "%s-%s" %(slug, qs.first().id)
-        new_slug = "%s-%s" %(slug, qs.first().performa_in.strftime("%Y-%m-%d"))
+        # new_slug = "%s-%s" %(slug, qs.first().performa_in.strftime("%Y-%m-%d"))
+        new_slug = "%s-%s" %(slug, qs.count())
         print ('New slug %s' % new_slug)
         return create_voy_slug(instance, new_slug=new_slug)
     return slug

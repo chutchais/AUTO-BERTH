@@ -53,7 +53,7 @@ def is_overdue(perform_date):
 
 	if perform_date < now:
 		# print((now-perform_date).total_seconds()/60)
-		return 'class=danger'
+		return 'class= danger'
 	# else:
 	# 	minutediff = (perform_date-now).total_seconds()/60
 	# 	return 'class=alert-warning' if minutediff <60 else ''
