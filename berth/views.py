@@ -33,7 +33,7 @@ class CutOffUpdateView(LoginRequiredMixin,UpdateView):
 
 	def get_form_kwargs(self):
 		kwargs = super(CutOffUpdateView,self).get_form_kwargs()
-		print(kwargs)
+		# print(kwargs)
 		return kwargs
 
 class CutOffCreateView(LoginRequiredMixin,CreateView):
@@ -82,7 +82,7 @@ class CutOffDeleteView(LoginRequiredMixin,DeleteView):
 	def get_success_url(self):
 	# Assuming there is a ForeignKey from Comment to Post in your model
 		voy = self.object.voy 
-		print (voy)
+		# print (voy)
 		return reverse_lazy( 'berth:voy-detail', kwargs={'slug': voy.slug})
 
 	# def get_form_kwargs(self):
@@ -141,6 +141,7 @@ def cutoff(request):
 	# import datetime
 	year = request.GET.get('year', '')
 	workweek = request.GET.get('week', '')
+	
 	if workweek=='' and year=='':
 		# Use current week
 		today= datetime.date.today()
@@ -148,14 +149,14 @@ def cutoff(request):
 		to_date = from_date +  timedelta(days=7)
 		year = from_date.strftime('%Y')#-%m-%d %H:%M
 		workweek = from_date.strftime('%W')
-		print (today,from_date,to_date)
+		# print (today,from_date,to_date)
 	else:
 		# from isoweek import Week
-		print (year,workweek)
+		# print (year,workweek)
 		d = foo(int(year),int(workweek))
 		from_date = d[0]
 		to_date = d[1]
-		print(d)
+		# print(d)
 	# wk = from_date.isocalendar()[1]
 	# ------------
 
@@ -189,7 +190,7 @@ def cutoff(request):
 		draft=False).exclude(service__name__icontains='DIS').order_by('-modified_date')
 
 	lastupdate = c.first()
-	print ('Last update %s' % lastupdate)
+	# print ('Last update %s' % lastupdate)
 
 	return render(request, 'cutoff.html', {'A':a,
 						'B':b,

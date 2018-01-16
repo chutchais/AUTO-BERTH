@@ -110,7 +110,7 @@ def get_fix_cutoff(service,perform_date):
 		return Saturday.replace(hour=12, minute=00)
 
 	if 'SE1' in strService :
-		print (Thursday)
+		# print (Thursday)
 		return Thursday.replace(hour=6, minute=00)
 
 	if 'ANX' in strService :
