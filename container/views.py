@@ -153,6 +153,7 @@ def BayReport(request,slug):
 			move=Sum(Case(When( stowage = F('original_stowage'),then=Value(0)),default=Value(1),output_field=IntegerField()))
 			)
 		dup = c.values('stowage','bay').annotate(number=Count('container')).exclude(number=1)
+
 		return render(
 			request,
 			'container/bay.html',
@@ -163,6 +164,7 @@ def BayReport(request,slug):
 			)
 	else:
 		#show Search result
+		print ('Hello World')
 		qs = c.filter(container__icontains=query).order_by('container')
 		return render(
 			request,

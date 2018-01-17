@@ -245,8 +245,7 @@ def create_voy_slug(instance, new_slug=None):
 def pre_save_voy_receiver(sender, instance, *args, **kwargs):
 	# print ('Presave Trigger')
 	#To support Save as Draft 
-	if not instance.slug:
-		instance.slug = create_voy_slug(instance)
+	instance.slug = create_voy_slug(instance)
 	# if not instance.slug:
 	# 	instance.slug = create_voy_slug(instance)
 

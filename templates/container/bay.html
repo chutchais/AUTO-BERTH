@@ -40,7 +40,7 @@
 						<td>{{obj.original_stowage}}
 							{% if obj.stowage != obj.original_stowage %}
 							<small>
-								<a href="{% url 'container:stowage-restore' obj.slug  %}?q={{ request.GET.q }}&mode=search">restore</a>
+								<a href="{% url 'container:container-restore' obj.slug  %}?q={{ request.GET.q }}&mode=search">restore</a>
 							</small>
 							{% endif %}
 						</td>
