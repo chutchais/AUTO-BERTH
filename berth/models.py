@@ -232,10 +232,11 @@ def create_voy_slug(instance, new_slug=None):
     if new_slug is not None:
         slug = new_slug
     qs = Voy.objects.filter(slug=slug).order_by("-id")
+    # qs = Voy.objects.filter(voy=instance.voy).order_by("-id")
     exists = qs.exists()
     if exists:
         # new_slug = "%s-%s" %(slug, qs.first().performa_in.strftime("%Y-%m-%d"))
-        new_slug = "%s-%s" %(slug, qs.count())
+        new_slug = "%s-%s" %(slug, qs.count()+1)
         print ('New slug %s' % new_slug)
         return create_voy_slug(instance, new_slug=new_slug)
     return slug
@@ -244,7 +245,8 @@ def create_voy_slug(instance, new_slug=None):
 def pre_save_voy_receiver(sender, instance, *args, **kwargs):
 	# print ('Presave Trigger')
 	#To support Save as Draft 
-	instance.slug = create_voy_slug(instance)
+	if not instance.slug:
+		instance.slug = create_voy_slug(instance)
 	# if not instance.slug:
 	# 	instance.slug = create_voy_slug(instance)
 
