@@ -21,7 +21,7 @@ from bayplan.models import BayPlanFile
 
 
 class BayPlanListAPIView(ListAPIView):
-	queryset=BayPlanFile.objects.filter(uploaded=False)
+	queryset=BayPlanFile.objects.filter(uploaded=False,ready_to_load=True)
 	serializer_class=BayPlanSerializer
 	filter_backends=[SearchFilter,OrderingFilter]
 	search_fields =['filename']

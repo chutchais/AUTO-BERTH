@@ -43,6 +43,7 @@
 						<th>#Container</th>
 				        <th>Remark</th>
 				        <th>datetime</th>
+				        <th>Ready to Upload</th>
 				        <th></th>
 				        <th></th>
 				        <th></th>
@@ -55,6 +56,13 @@
 						<td>{{ object.bayplanfile.container_set.count }}</td>
 					 	<td>{{ object.bayplanfile.remark }}</td>
 					 	<td>{{ object.bayplanfile.created_date }}</td>
+					 	<td>
+					 	{% if object.bayplanfile.ready_to_load %}
+					 		<span class="glyphicon glyphicon-ok text-success icon-4x"></span>
+					 	{% else %}
+					 		<span class="glyphicon glyphicon-remove text-danger icon-4x"></span>
+					 	{% endif%}
+					 	</td>
 					 	<td><a href="{% url 'bayplan:edit' object.bayplanfile.slug %}">Edit</a></td>
 					 	<td><a href="{% url 'bayplan:delete' object.bayplanfile.slug %}">Delete</a></td>
 					 	<td><a href="{{ object.bayplanfile.filename.url}}"> Download file</a></td>

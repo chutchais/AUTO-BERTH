@@ -21,9 +21,18 @@ class ContainerListSerializer(ModelSerializer):
 		model = Container
 		# fields ='__all__'
 		# exclude = ('voy','created_date','modified_date','user',)
-		fields =['container','stowage','original_stowage']
+		fields =['container','stowage','original_stowage','ready_to_load','slug']
 
 class ContainerDetailSerializer(ModelSerializer):
 	class Meta:
 		model = Container
 		fields ='__all__'
+
+class ContainerUpdateSerializer(ModelSerializer):
+	class Meta:
+		model = Container
+		fields =[
+			'ready_to_load',
+			'uploaded',
+			'upload_date'
+		]

@@ -4,11 +4,12 @@ from django.contrib import admin
 from . import views
 from .views import (ContainerListView,FileProcess,
 					BayReport,BayDetail,ContainerDetailView,
-					ContainerUpdateView,ContainerRestore,BayRestore)
+					ContainerUpdateView,ContainerRestore,BayRestore,BayReady)
 
 urlpatterns = [
     # url(r'^$', views.index, name='index'),
     url(r'(?P<slug>[-\w]+)/$', BayReport, name='bay'), #File Slug
+    url(r'(?P<slug>[-\w]+)/(?P<bay>\d+)/ready$', BayReady, name='bay-ready'), #File Slug
     url(r'(?P<slug>[-\w]+)/(?P<bay>\d+)/restore$', BayRestore, name='bay-restore'), #File Slug
     url(r'(?P<slug>[-\w]+)/(?P<bay>\d+)$', BayDetail, name='detail'), #File Slug
     

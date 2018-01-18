@@ -34,9 +34,11 @@ class ContainerForm(ModelForm):
 
 	def save(self, commit=True):
 		container = super(ContainerForm, self).save(commit=False)
-		print ('Current stowage %s' % container.stowage)
+		# print ('Current stowage %s' % container.stowage)
 		container.new_stowage = container.stowage
 		container.bay=container.stowage[:1] if len(container.stowage)==5 else container.stowage[:2]
+		# container.ready_to_load = True
+		container.uploaded = False
 		if commit:
 			container.save()
 		return container

@@ -137,6 +137,18 @@ def BayRestore(request,slug,bay):
 
 	return HttpResponseRedirect(url)
 
+def BayReady(request,slug,bay):
+	if not request.user.is_authenticated:
+		return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
+	action = request.GET.get('action')
+	container_list = Container.objects.filter(bayplanfile__slug=slug,bay=bay)
+	for  c in container_list:
+		# if c.stowage != c.original_stowage:
+		c.ready_to_load = True if action=='set' else False
+		c.save()
+	url = reverse('container:detail',kwargs={'slug':slug,'bay':bay})
+	return HttpResponseRedirect(url)
+
 
 def BayReport(request,slug):
 	if not request.user.is_authenticated:
@@ -150,7 +162,8 @@ def BayReport(request,slug):
 		# Show Overall view
 		b = c.values('bay').annotate(
 			number=Count('container'),
-			move=Sum(Case(When( stowage = F('original_stowage'),then=Value(0)),default=Value(1),output_field=IntegerField()))
+			move=Sum(Case(When( stowage = F('original_stowage'),then=Value(0)),default=Value(1),output_field=IntegerField())),
+			ready=Sum(Case(When( ready_to_load = True,then=Value(1)),default=Value(0),output_field=IntegerField()))
 			)
 		dup = c.values('stowage','bay').annotate(number=Count('container')).exclude(number=1)
 
@@ -164,7 +177,7 @@ def BayReport(request,slug):
 			)
 	else:
 		#show Search result
-		print ('Hello World')
+		# print ('Hello World')
 		qs = c.filter(container__icontains=query).order_by('container')
 		return render(
 			request,

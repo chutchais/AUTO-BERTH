@@ -6,7 +6,8 @@ from rest_framework.generics import (
 	ListAPIView,
 	UpdateAPIView,
 	RetrieveAPIView,
-	RetrieveUpdateAPIView
+	RetrieveUpdateAPIView,
+	RetrieveUpdateDestroyAPIView
 	)
 
 from rest_framework.filters import (
@@ -14,7 +15,7 @@ from rest_framework.filters import (
 	OrderingFilter,
 	)
 
-from .serialize import ContainerListSerializer,ContainerDetailSerializer
+from .serialize import ContainerListSerializer,ContainerDetailSerializer,ContainerUpdateSerializer
 from container.models import Container
 
 
@@ -34,6 +35,11 @@ class ContainerDetailAPIView(RetrieveAPIView):
 	serializer_class=ContainerDetailSerializer
 	lookup_field='slug'
 	# print ("vessel details")
+
+class ContainerUpdateAPIView(RetrieveUpdateDestroyAPIView):
+	queryset=Container.objects.all()
+	serializer_class=ContainerUpdateSerializer
+	lookup_field='slug'
 
 
 

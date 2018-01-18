@@ -20,6 +20,13 @@
 				{% if has_change %}
 				<p class="text-right"><a href='{% url "container:bay-restore" container_list.first.bayplanfile.slug container_list.first.bay %}'>Set all to original</a></p>
 				{% endif %}
+
+				<p class="text-right">
+					<a href='{% url "container:bay-ready" container_list.first.bayplanfile.slug container_list.first.bay %}?action=set'>Ready to load</a>
+					|
+					<a href='{% url "container:bay-ready" container_list.first.bayplanfile.slug container_list.first.bay %}?action=clear'>Not Ready to load</a>
+				</p>
+
 				</div>
 
 				<div>

@@ -7,6 +7,20 @@ register = template.Library()
 
 import os
 
+
+@register.assignment_tag
+def is_readytoload(load_number):
+	if load_number > 0:
+		vType='ok'
+		vColor='success'
+		return 'class=\"glyphicon glyphicon-%s text-%s\"' % (vType,vColor)
+	else:
+		vType='remove'
+		vColor='danger'
+		return ''
+
+	
+
 @register.assignment_tag
 def percent(x,total):
 	# print (obj.strip())
