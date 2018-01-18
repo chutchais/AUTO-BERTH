@@ -23,6 +23,9 @@ class Container(models.Model):
 	original_stowage = models.CharField(max_length=10,blank=True, null=True)
 	bay       =	models.CharField(max_length=10,blank=True, null=True)
 	original_bay       =	models.CharField(max_length=10,blank=True, null=True)
+	ready_to_load		= models.BooleanField(default=False)# Ready to UpLoad
+	uploaded = models.BooleanField(default=False)
+	upload_date = models.DateTimeField(blank=True, null=True)
 	created_date = models.DateTimeField(auto_now_add=True)
 	modified_date = models.DateTimeField(blank=True, null=True,auto_now=True)
 	user = models.ForeignKey('auth.User',blank=True,null=True)

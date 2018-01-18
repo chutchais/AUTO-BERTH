@@ -1,10 +1,24 @@
 from django import template
 from datetime import timedelta
+from django.db.models import Avg,Sum
 import datetime
 
 register = template.Library()
 
 import os
+
+@register.assignment_tag
+def percent(x,total):
+	# print (obj.strip())
+	if x:
+		return (x/total)*100
+	else:
+		return 0
+		
+@register.assignment_tag
+def sum(obj,field):
+	# print (obj.strip())
+	return obj.aggregate(Sum(field))
 
 @register.assignment_tag
 def combine_stowage(bay,tier,row):
