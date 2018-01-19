@@ -21,7 +21,7 @@ from  bayplan.models import BayPlanFile
 
 
 under_deck = ['16','14','12','10','08','06','04','02']
-over_deck =['90','88','86','84','82']
+over_deck =['90','88','86','84','82','80']
 
 tier1 =['10','08','06','04','02','00','01','03','05','07','09']
 tier2 =['12','10','08','06','04','02','00','01','03','05','07','09','11']
@@ -137,16 +137,30 @@ def BayRestore(request,slug,bay):
 
 	return HttpResponseRedirect(url)
 
+def FileReady(request,slug):
+	if not request.user.is_authenticated:
+		return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
+	action = request.GET.get('action')
+	container_list = Container.objects.filter(bayplanfile__slug=slug)
+	container_list.update(ready_to_load=True if action=='set' else False)
+	# for  c in container_list:
+	# 	# if c.stowage != c.original_stowage:
+	# 	c.ready_to_load = True if action=='set' else False
+	# 	c.save()
+	url = reverse('container:bay',kwargs={'slug':slug})
+	return HttpResponseRedirect(url)
+
 def BayReady(request,slug,bay):
 	if not request.user.is_authenticated:
 		return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
 	action = request.GET.get('action')
 	container_list = Container.objects.filter(bayplanfile__slug=slug,bay=bay)
-	for  c in container_list:
-		# if c.stowage != c.original_stowage:
-		c.ready_to_load = True if action=='set' else False
-		c.save()
-	url = reverse('container:detail',kwargs={'slug':slug,'bay':bay})
+	container_list.update(ready_to_load=True if action=='set' else False)
+	# for  c in container_list:
+	# 	# if c.stowage != c.original_stowage:
+	# 	c.ready_to_load = True if action=='set' else False
+	# 	c.save()
+	url = reverse('container:bay',kwargs={'slug':slug})
 	return HttpResponseRedirect(url)
 
 

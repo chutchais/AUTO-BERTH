@@ -61,6 +61,9 @@
 		{% percent total_move.move__sum total_container.number__sum as percent_move %}
 
 		<h3>KPI : {{total_move.move__sum}}/{{total_container.number__sum}} -- {{percent_move|floatformat:1}}%</h3>
+		<a href="{% url 'container:file-ready' bayfile.slug %}?action=set">Set ready to load</a> | 
+		<a href="{% url 'container:file-ready' bayfile.slug %}?action=clear">Clear ready to load</a>
+
 		<div class="row">
 			<div class="col-xs-3 col-sm-3">
 				<h3>Bay 0X</h3>
