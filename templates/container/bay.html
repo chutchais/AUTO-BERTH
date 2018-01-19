@@ -15,7 +15,7 @@
 		<h3>Bay Information : {{ bayfile.voy }} <small><a href="{% url 'bayplan:voy-detail' bayfile.voy.slug %}">back</a></small></h3>
 
 		<form class='form' method='GET' action='.'>
-			<input type='text' placeholder="Search container.." name="q" value='{{ request.GET.q}}'>
+			<input type='text' id='search' placeholder="Search container.." name="q" value='{{ request.GET.q}}'>
 			<button class='btn btn-default' type='submit'>Search</button>
 			<a href="{% url 'container:bay' bayfile.slug %}">Clear result</a>
 		</form>
@@ -432,3 +432,26 @@
 
 </div>
 {% endblock form_content %}
+
+
+{% block java_content %}
+<!-- <script>
+$(document).ready(function(){
+    $("a").click(function(){
+        alert("The paragraph was clicked.");
+    });
+});
+</script> -->
+<script>
+
+	$(function() {
+	  $('#search').focus().select();
+	});
+
+	$("input[type='text']").on("click", function () {
+        $(this).select();
+	});
+
+</script>
+
+{% endblock java_content %}
