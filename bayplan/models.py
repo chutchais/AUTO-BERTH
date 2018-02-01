@@ -11,7 +11,8 @@ class BayPlanFile(models.Model):
 				on_delete=models.CASCADE,
 				primary_key=True,
 				)
-	filename = models.FileField(upload_to='bayplan/%Y/%m/%d/',blank=True, null=True)
+	# filename = models.FileField(upload_to='bayplan/%Y/%m/%d/',blank=True, null=True)
+	filename = models.FileField(upload_to='bayplan/%Y/%m/%d/')
 	slug = models.SlugField(unique=True,blank=True, null=True)
 	remark = models.TextField(blank=True, null=True)
 	ready_to_load = models.BooleanField(default=False)

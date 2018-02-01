@@ -14,13 +14,29 @@ class ContainerForm(ModelForm):
 		fields = ['stowage']
 
 	def clean_stowage(self):
+		under_deck = ['16','14','12','10','08','06','04','02']
+		over_deck =['90','88','86','84','82','80']
+		tier1 =['16','14','12','10','08','06','04','02','00','01','03','05','07','09','11','13','15']
+		# tier2 =['16','14','12','10','08','06','04','02','00','01','03','05','07','09','11','13','15']
 		import re
-		rex = re.compile("^[0-9]{5,6}$")
+		# rex = re.compile("^[0-9]{5,6}$")
+		rex = re.compile("^[0-9]{6}$") # 6 digits of stowage
 		stowage = self.cleaned_data.get("stowage")
-		if  len(stowage) < 5 or len(stowage) > 6:
-			raise forms.ValidationError('Not a valid Slot , it should be 5 or 6 digit')
+		# if  len(stowage) < 5 or len(stowage) > 6:
+		# 	raise forms.ValidationError('Not a valid Slot , it should be 5 or 6 digit')
+		# if  not rex.match(stowage):
+		# 	raise forms.ValidationError('Not a valid Slot , only accept numeric')
+		# return stowage
+		if  len(stowage)!= 6:
+			raise forms.ValidationError('Invalid Slot , it must be 6 digit')
 		if  not rex.match(stowage):
-			raise forms.ValidationError('Not a valid Slot , only accept numeric')
+			raise forms.ValidationError('Invalid Slot , accept only numeric')
+		if stowage[:2]=='00':
+			raise forms.ValidationError('Bay 00 dost not exist..')
+		if not stowage[2:4] in tier1 :
+			raise forms.ValidationError('Invalid slot, %s dost not exist tier list' % stowage[2:4])
+		if not (stowage[-2:] in under_deck or stowage[-2:] in over_deck) :
+			raise forms.ValidationError('Invalid slot, %s dost not exist row list' % stowage[-2:])
 		return stowage
 
 	def __init__(self,stowage=None,*args,**kwargs):

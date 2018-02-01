@@ -8,6 +8,9 @@
     Berth Schedule Report
 {% endblock %}
 
+{% block stylesheet %}
+	
+{% endblock stylesheet %}
 
 {% block form_content %}
 <div class="container">
@@ -19,7 +22,7 @@
 		 Performa - In : {{ object.performa_in }}<br>
 		 Performa - Out : {{ object.performa_out }}<br>
 		 ETA : {{ object.eta }}<br>
-		 ETB : {{ object.etb }}</h3>
+		 ETB : {{ object.etb }}<br>
 		 ETD : {{ object.etd }}<br>
 		 DIS : {{ object.dis_no }}<br>
 		 LOAD : {{ object.load_no }}<br>

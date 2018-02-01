@@ -1,6 +1,12 @@
 {% if form.errors.non_field_errors %}
-	{{ form.errors.non_field_errors }}
+	<div class="alert alert-danger" role="alert">
+		{{ form.errors.non_field_errors }}
+	</div>
 {% endif %}
+
+<!-- {% if form.non_field_errors %}
+  <div class="alert alert-danger">{{ form.non_field_errors|join:"<br \>" }}</div>
+  {% endif %} -->
 
 <form method='POST' enctype="multipart/form-data"> {% csrf_token %}
 {{ form.as_p }}

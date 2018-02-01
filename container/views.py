@@ -14,7 +14,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.conf import settings
 
-from .models import Container
+from .models import Container,DischargePort
 from .forms import ContainerForm
 from  bayplan.models import BayPlanFile
 
@@ -210,6 +210,9 @@ def BayDetail(request,slug,bay):
 		return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
 
 	query = request.GET.get('q',None)
+	mode = request.GET.get('mode','container')
+	print ('Mode:%s' % mode)
+
 	bayfile =BayPlanFile.objects.get(slug=slug)
 	c = Container.objects.filter(bayplanfile=bayfile,bay=bay)
 	# Find changes slot
@@ -239,7 +242,8 @@ def BayDetail(request,slug,bay):
 		'under_deck': under_deck,
 		'over_deck':over_deck,
 		'tier': tier,
-		'q':query}
+		'q':query,
+		'mode': True if mode=='container' else False }
 		)
 
 # filehandle.read()
@@ -280,12 +284,13 @@ def FileProcess(request,slug):
 			if len(stowage)==5:
 				stowage = '0%s'% stowage
 				print (stowage)
-
+			# Get Disch Port Object
+			disport_obj,created = DischargePort.objects.get_or_create(name=dis_port)
 
 			c = Container.objects.create(bayplanfile=bayfile,item_no=item_count,
 								container=vContainer,iso_code=iso,full=True if full=='Full' else False,
 								partner=partner,weight=weight,
-								load_port=load_port,dis_port=dis_port,deliverly_port=delivery_port,
+								load_port=load_port,dis_port=disport_obj,deliverly_port=delivery_port,
 								good_desc=desc,
 								stowage=stowage,bay=stowage[:1] if len(stowage)==5 else stowage[:2],
 								original_stowage=stowage,original_bay=stowage[:1] if len(stowage)==5 else stowage[:2] )

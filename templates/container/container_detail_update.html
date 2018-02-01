@@ -22,13 +22,22 @@
 		| <a href="{% url 'container:container-restore' object.slug  %}?q={{ object.container }}">Move back to original slot</a>
 		</small>
 	</h3>
-	<hr/>
+	
+	
 	{% endif %}
-
+	<h4>Dis-charge Port : {{ object.dis_port }}</h4>
+	<hr/>
 	<h3>Change to new Slot </h3>
+
+	
+
 	{% include 'snippets/form_snippet.html' with form=form %}
 	
-	
+	{% if form.errors.non_field_errors %}
+	<div class="alert alert-danger" role="alert">
+		{{ form.errors.non_field_errors }}
+	</div>
+	{% endif %}
 
 	{% if request.GET.mode == 'search' %} 
 		<a href="{% url 'container:bay' object.bayplanfile.slug %}?q={{ request.GET.q }}">cancel</a>
@@ -71,9 +80,9 @@ $(document).ready(function(){
 	  $('#id_stowage').focus().select();
 	});
 
-	$("input[type='text']").on("click", function () {
-        $(this).select();
-	});
+	// $("input[type='text']").on("click", function () {
+ //        $(this).select();
+	// });
 // function getRow(slot) {
 // 	// console.log(slot.toString().length)
 // 	var slot_str = slot.toString()

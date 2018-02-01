@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Container
+from django.utils.translation import gettext_lazy as _
+from .models import Container,DischargePort
 # Register your models here.
 class ContainerAdmin(admin.ModelAdmin):
     search_fields = ['container']
@@ -14,3 +15,18 @@ class ContainerAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Container,ContainerAdmin)
+
+
+
+class DischargePortAdmin(admin.ModelAdmin):
+    search_fields = ['name']
+    list_filter = []
+    list_display = ('__str__','color')
+    list_editable = ['color']
+    # list_editable = ('color','move_performa')
+    fieldsets = [
+        ('Basic Information',{'fields': ['name','color']}),
+        ]
+
+
+admin.site.register(DischargePort,DischargePortAdmin)

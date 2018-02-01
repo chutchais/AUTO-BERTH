@@ -35,8 +35,18 @@ def sum(obj,field):
 	return obj.aggregate(Sum(field))
 
 @register.assignment_tag
+def weight(x):
+	y=str(x)
+	return ('%s.%s' % (y[:-3],y[2:3]))
+
+@register.assignment_tag
 def combine_stowage(bay,tier,row):
 	return ('%s%s%s' % (bay,tier,row))
+
+@register.assignment_tag
+def first_container(obj,stowage):
+	return obj.filter(stowage=stowage).first()
+
 
 @register.filter
 def in_stowage(obj, stowage):
