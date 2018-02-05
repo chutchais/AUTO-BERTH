@@ -40,20 +40,21 @@ class ContainerUpdateView(LoginRequiredMixin,UpdateView):
 	form_class = ContainerForm
 	# success_url = reverse_lazy('container:detail',kwargs={})
 
-	def get_queryset(self):
-		qs = super(ContainerUpdateView, self).get_queryset()
-		return qs.all()
+	# Comment on Feb 2,2018 -- To improve Save speed
+	# def get_queryset(self):
+	# 	print ('Stowage Update -- Get_Queryset')
+	# 	qs = super(ContainerUpdateView, self).get_queryset()
+	# 	return qs.all()
 
-	def get_form_kwargs(self):
-		kwargs = super(ContainerUpdateView,self).get_form_kwargs()
-		kwargs['stowage'] = self.object.stowage
-		return kwargs
+	# Comment on Feb 2,2018 -- To improve Save speed
+	# def get_form_kwargs(self):
+	# 	kwargs = super(ContainerUpdateView,self).get_form_kwargs()
+	# 	kwargs['stowage'] = self.object.stowage
+	# 	return kwargs
 
 	def get_success_url(self,*args, **kwargs):
 		# print('Slug %s' % self.object.bayplanfile.slug)
 		mode = self.request.GET.get('mode')
-		
-
 		print(mode)
 		slug =self.object.bayplanfile.slug
 		bay = self.object.bay
@@ -70,12 +71,13 @@ class ContainerUpdateView(LoginRequiredMixin,UpdateView):
 		# reverse_lazy('container:detail',kwargs={'slug':slug,'bay':bay},query={'q':self.object.container})
 		# return reverse(url)
 
-	def form_valid(self,form,*args, **kwargs):
-		# action = request.GET.get('action')
-		# print ('Valid form %s' % action)
-		obj = form.save(commit=False)
-		# obj.user = self.request.user
-		return super(ContainerUpdateView,self).form_valid(form)
+	# Comment on Feb 2,2018 -- To improve Save speed
+	# def form_valid(self,form,*args, **kwargs):
+	# 	# action = request.GET.get('action')
+	# 	# print ('Valid form %s' % action)
+	# 	obj = form.save(commit=False)
+	# 	# obj.user = self.request.user
+	# 	return super(ContainerUpdateView,self).form_valid(form)
 
 
 class ContainerListView(LoginRequiredMixin,ListView):
@@ -296,7 +298,75 @@ def FileProcess(request,slug):
 								original_stowage=stowage,original_bay=stowage[:1] if len(stowage)==5 else stowage[:2] )
 			# =============
 	return redirect(reverse_lazy( 'container:bay', kwargs={'slug': slug}))
-	# return render(
-	# 	request,
-	# 	'container/container_list.html',
-	# 	{})
+
+
+def FileUpdate(request,slug):
+	if not request.user.is_authenticated:
+		return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
+
+	bayfile =BayPlanFile.objects.get(slug=slug)
+	book = xlrd.open_workbook(file_contents=bayfile.updated_filename.read())
+	xl_sheet = book.sheet_by_index(0)
+	print ('Sheet name: %s' % xl_sheet.name)
+	print ('Total row %s' % xl_sheet.nrows )
+	print ('Total col %s' % xl_sheet.ncols)
+
+	regex='^[A-Z]{4}[0-9]{7}$'
+	item_count =0
+	new_count = 0
+
+	# Find Not Ready Bay.
+	bay_list_tmp = bayfile.container_set.filter(ready_to_load=False).values('bay').annotate(
+			total=Count('container')
+			).values_list('bay', flat=True)
+	# m_list = m.values_list('machine_name', flat=True)
+	bay_list = []
+	for i in bay_list_tmp:
+		bay_list.append(i)
+
+	# print(bay_list)
+	Container.objects.filter(bayplanfile=bayfile , bay__in=bay_list).delete()
+	
+	for row_index in range(1, xl_sheet.nrows):
+		vContainer = xl_sheet.cell(row_index, 1).value.__str__().strip()
+		if re.match(regex,vContainer):
+			item_count = item_count+1
+			# Reading all value
+			iso 		= xl_sheet.cell(row_index, 2).value.__str__().strip()
+			full 		= xl_sheet.cell(row_index, 3).value.__str__().strip()
+			partner		= xl_sheet.cell(row_index, 5).value.__str__().strip()
+			weight		= xl_sheet.cell(row_index, 6).value.__str__().strip().replace('.0','')
+			load_port	= xl_sheet.cell(row_index, 10).value.__str__().strip()
+			dis_port	= xl_sheet.cell(row_index, 11).value.__str__().strip()
+			delivery_port= xl_sheet.cell(row_index, 12).value.__str__().strip()
+			desc        = xl_sheet.cell(row_index, 17).value.__str__().strip()
+			stowage		= xl_sheet.cell(row_index, 26).value.__str__().strip().replace('.0','')
+
+			if load_port !='THLCH':
+				print ('Not load at LCB %s' % load_port )
+				continue
+
+			if len(stowage)==5:
+				stowage = '0%s'% stowage
+				print (stowage)
+
+			if not stowage[:2] in bay_list:
+				# print('%s is no need to update' % stowage[:2])
+				continue
+			# Get Disch Port Object
+			disport_obj,created = DischargePort.objects.get_or_create(name=dis_port)
+
+			c = Container.objects.create(bayplanfile=bayfile,item_no=item_count,
+								container=vContainer,iso_code=iso,full=True if full=='Full' else False,
+								partner=partner,weight=weight,
+								load_port=load_port,dis_port=disport_obj,deliverly_port=delivery_port,
+								good_desc=desc,
+								stowage=stowage,bay=stowage[:1] if len(stowage)==5 else stowage[:2],
+								original_stowage=stowage,original_bay=stowage[:1] if len(stowage)==5 else stowage[:2] )
+			# =============
+
+	# Delete Updated-filename
+	bayfile.updated_filename = None
+	bayfile.save()
+
+	return redirect(reverse_lazy( 'container:bay', kwargs={'slug': slug}))

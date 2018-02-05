@@ -9,7 +9,8 @@ class BayPlanForm(ModelForm):
 		fields =[
 			'filename',
 			'remark',
-			'ready_to_load'
+			'ready_to_load',
+			'updated_filename'
 		]
 	def __init__(self,user=None,*args,**kwargs):
 		super(BayPlanForm,self).__init__(*args,**kwargs)

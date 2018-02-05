@@ -4,6 +4,8 @@ from django.utils.text import slugify
 from django.db.models.signals import pre_save
 from django.urls import reverse
 
+from django.db.models import Count,Sum,Min,Max
+
 # Create your models here.
 class BayPlanFile(models.Model):
 	voy = models.OneToOneField(
@@ -18,6 +20,7 @@ class BayPlanFile(models.Model):
 	ready_to_load = models.BooleanField(default=False)
 	uploaded = models.BooleanField(default=False)
 	upload_date = models.DateTimeField(blank=True, null=True)
+	updated_filename = models.FileField(upload_to='bayplan/%Y/%m/%d/',blank=True, null=True)
 	created_date = models.DateTimeField(auto_now_add=True)
 	modified_date = models.DateTimeField(blank=True, null=True,auto_now=True)
 	user = models.ForeignKey('auth.User',blank=True,null=True)
@@ -27,6 +30,12 @@ class BayPlanFile(models.Model):
 
 	def get_absolute_url(self):
 		return reverse('bayplan:voy-detail', kwargs={'slug': self.voy.slug})
+
+	def get_not_ready_bay(self):
+		summary = self.container_set.filter(ready_to_load=False).values('bay').annotate(
+			total=Count('container')
+			)
+		return summary
 
 
 def create_bayplan_slug(instance, new_slug=None):

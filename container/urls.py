@@ -4,7 +4,7 @@ from django.contrib import admin
 from . import views
 from .views import (ContainerListView,FileProcess,
 					BayReport,BayDetail,ContainerDetailView,
-					ContainerUpdateView,ContainerRestore,BayRestore,BayReady,FileReady)
+					ContainerUpdateView,ContainerRestore,BayRestore,BayReady,FileReady,FileUpdate)
 
 urlpatterns = [
     # url(r'^$', views.index, name='index'),
@@ -16,6 +16,7 @@ urlpatterns = [
     
     url(r'(?P<slug>[-\w]+)/ready$', FileReady, name='file-ready'), #File Slug
     url(r'(?P<slug>[-\w]+)/process$', FileProcess,name='process'),
+    url(r'(?P<slug>[-\w]+)/update$', FileUpdate,name='update'),
     # url(r'(?P<slug>[-\w]+)/delete$', BayPlanDeleteView.as_view(),name='delete'),
     # url(r'(?P<slug>[-\w]+)/edit$', BayPlanUpdateView.as_view(),name='edit'),
     url(r'stowage/(?P<slug>[-\w]+)/restore$', ContainerRestore,name='container-restore'), #Stowage Slug
