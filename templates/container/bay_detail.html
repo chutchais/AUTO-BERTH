@@ -14,6 +14,24 @@
 		    color: #000000;
 		}
 
+		.cell {
+		   width:200px;
+		   height:65px;
+		   position:relative;
+		   border:1px solid #eee;
+		   background-color:#fcfcfc;
+		 }
+
+		.triangle-up-right {
+		  width: 0;
+		  height: 0;
+		  border-top: 10px solid rgb(246, 85, 85);
+		  border-left: 10px solid transparent;
+		 top:0;
+		 right:0;
+		 position:absolute;
+		}
+
 		/**
 		 * Tooltip Styles
 		 */
@@ -146,7 +164,7 @@
 									{% if q == x.container %}
 										<div class="bg-danger text-black">
 									{% else %}
-										<div>
+										<div class="text-nowrap">
 									{% endif %}
 												{% weight x.weight as new_weight %}
 												{% if x.original_stowage != x.stowage %}
@@ -159,7 +177,7 @@
 																{{new_weight }}
 															{% endif %}
 														</a>
-													</b><br>
+													</b>
 												{% else %}
 													<a href="{{ x.get_absolute_url }}" 
 															data-tooltip="{{x.get_tooltip|safe}}">
@@ -168,8 +186,20 @@
 															{% else %}
 																{{new_weight }}
 															{% endif %}
-														</a><br>
+														</a>
 												{% endif %}
+												<small><small>
+												{% if x.iso_code == "45R1"  %}
+														<span class="glyphicon glyphicon-registration-mark icon-1x"></span>
+												{%endif%}
+												{% if x.iso_code == "45G1"  %}
+														<span class="glyphicon glyphicon-header icon-1x"></span>
+												{%endif%}
+												{% if x.iso_code == "L5G1"  %}
+														<span class="glyphicon glyphicon-menu-hamburger icon-1x"></span>
+												{%endif%}
+											</small></small>
+												<br>
 										</div>
 								{% endfor %}
 								
@@ -201,7 +231,7 @@
 									{% if q == x.container %}
 										<div class="bg-danger text-white">
 									{% else %}
-										<div>
+										<div class="text-nowrap">
 									{% endif %}
 												{% weight x.weight as new_weight %}
 												{% if x.original_stowage != x.stowage %}
@@ -211,8 +241,8 @@
 																{{x.container }}
 															{% else %}
 																{{new_weight }}
-															{% endif %}
-														</a></b><br>
+															{% endif %}	
+														</a></b>
 												{% else %}
 													
 													<a href="{{ x.get_absolute_url }}" 
@@ -222,8 +252,23 @@
 															{% else %}
 																{{new_weight}}
 															{% endif %}
-														</a><br>
+														</a>
+														
+														
 												{% endif %}
+												<small><small>
+													{% if x.iso_code == "45R1"  %}
+															<span class="glyphicon glyphicon-registration-mark icon-1x"></span>
+													{%endif%}
+													{% if x.iso_code == "45G1"  %}
+															<span class="glyphicon glyphicon-header icon-1x"></span>
+													{%endif%}
+													{% if x.iso_code == "L5G1"  %}
+															<span class="glyphicon glyphicon-menu-hamburger icon-1x"></span>
+													{%endif%}
+												</small></small>
+
+												<br>
 										</div>
 
 								{% endfor %}
@@ -248,6 +293,10 @@
 			</div>
 
 </div>
+
+<!-- <div class="cell"><div class="triangle-up-right"></div></div> -->
+
+
 
 {% endblock form_content %}
 

@@ -2,6 +2,7 @@ from django.forms import ModelForm
 from .models import Container
 from django import forms
 import re
+# from .views import under_deck,over_deck,tier1
 
 class ContainerForm(ModelForm):
 	# bay = forms.CharField(required=False)
@@ -15,7 +16,7 @@ class ContainerForm(ModelForm):
 
 	def clean_stowage(self):
 		under_deck = ['16','14','12','10','08','06','04','02']
-		over_deck =['90','88','86','84','82','80']
+		over_deck =['94','92','90','88','86','84','82','80']
 		tier1 =['16','14','12','10','08','06','04','02','00','01','03','05','07','09','11','13','15']
 		# tier2 =['16','14','12','10','08','06','04','02','00','01','03','05','07','09','11','13','15']
 		import re

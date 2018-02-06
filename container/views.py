@@ -13,6 +13,7 @@ from django.urls import reverse_lazy
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.conf import settings
+from django.utils.text import slugify
 
 from .models import Container,DischargePort
 from .forms import ContainerForm
@@ -21,7 +22,7 @@ from  bayplan.models import BayPlanFile
 
 
 under_deck = ['16','14','12','10','08','06','04','02']
-over_deck =['90','88','86','84','82','80']
+over_deck =['94','92','90','88','86','84','82','80']
 
 tier1 =['16','14','12','10','08','06','04','02','00','01','03','05','07','09','11','13','15']
 tier2 =['16','14','12','10','08','06','04','02','00','01','03','05','07','09','11','13','15']
@@ -217,6 +218,9 @@ def BayDetail(request,slug,bay):
 
 	bayfile =BayPlanFile.objects.get(slug=slug)
 	c = Container.objects.filter(bayplanfile=bayfile,bay=bay)
+
+
+
 	# Find changes slot
 	has_changes = False
 	b = c.exclude(stowage = F('original_stowage')).count()
@@ -264,7 +268,13 @@ def FileProcess(request,slug):
 	item_count =0
 	new_count = 0
 	Container.objects.filter(bayplanfile=bayfile).delete()
+	container_list = []
 	for row_index in range(1, xl_sheet.nrows):
+		load_port	= xl_sheet.cell(row_index, 10).value.__str__().strip()
+		if load_port !='THLCH':
+			continue
+
+
 		vContainer = xl_sheet.cell(row_index, 1).value.__str__().strip()
 		if re.match(regex,vContainer):
 			item_count = item_count+1
@@ -277,25 +287,41 @@ def FileProcess(request,slug):
 			dis_port	= xl_sheet.cell(row_index, 11).value.__str__().strip()
 			delivery_port= xl_sheet.cell(row_index, 12).value.__str__().strip()
 			desc        = xl_sheet.cell(row_index, 17).value.__str__().strip()
+			imdg        = xl_sheet.cell(row_index, 18).value.__str__().strip().replace('.0','')
+			un_no       = xl_sheet.cell(row_index, 19).value.__str__().strip().replace('.0','')
 			stowage		= xl_sheet.cell(row_index, 26).value.__str__().strip().replace('.0','')
 
 			if load_port !='THLCH':
-				print ('Not load at LCB %s' % load_port )
+				# print ('Not load at LCB %s' % load_port )
 				continue
 
 			if len(stowage)==5:
 				stowage = '0%s'% stowage
-				print (stowage)
+				# print (stowage)
 			# Get Disch Port Object
 			disport_obj,created = DischargePort.objects.get_or_create(name=dis_port)
-
-			c = Container.objects.create(bayplanfile=bayfile,item_no=item_count,
+			container_slug = slugify("%s-%s" %(vContainer, item_count))
+			c = Container(bayplanfile=bayfile,item_no=item_count,
 								container=vContainer,iso_code=iso,full=True if full=='Full' else False,
+								slug=container_slug,
 								partner=partner,weight=weight,
 								load_port=load_port,dis_port=disport_obj,deliverly_port=delivery_port,
 								good_desc=desc,
 								stowage=stowage,bay=stowage[:1] if len(stowage)==5 else stowage[:2],
-								original_stowage=stowage,original_bay=stowage[:1] if len(stowage)==5 else stowage[:2] )
+								original_stowage=stowage,original_bay=stowage[:1] if len(stowage)==5 else stowage[:2],
+								imdg=imdg,un_no=un_no)
+
+
+			container_list.append(c)
+
+	Container.objects.bulk_create(container_list)
+			# c = Container.objects.create(bayplanfile=bayfile,item_no=item_count,
+			# 					container=vContainer,iso_code=iso,full=True if full=='Full' else False,
+			# 					partner=partner,weight=weight,
+			# 					load_port=load_port,dis_port=disport_obj,deliverly_port=delivery_port,
+			# 					good_desc=desc,
+			# 					stowage=stowage,bay=stowage[:1] if len(stowage)==5 else stowage[:2],
+			# 					original_stowage=stowage,original_bay=stowage[:1] if len(stowage)==5 else stowage[:2] )
 			# =============
 	return redirect(reverse_lazy( 'container:bay', kwargs={'slug': slug}))
 
@@ -326,8 +352,13 @@ def FileUpdate(request,slug):
 
 	# print(bay_list)
 	Container.objects.filter(bayplanfile=bayfile , bay__in=bay_list).delete()
-	
+	container_list = []
+
 	for row_index in range(1, xl_sheet.nrows):
+		load_port	= xl_sheet.cell(row_index, 10).value.__str__().strip()
+		if load_port !='THLCH':
+			continue
+
 		vContainer = xl_sheet.cell(row_index, 1).value.__str__().strip()
 		if re.match(regex,vContainer):
 			item_count = item_count+1
@@ -340,6 +371,8 @@ def FileUpdate(request,slug):
 			dis_port	= xl_sheet.cell(row_index, 11).value.__str__().strip()
 			delivery_port= xl_sheet.cell(row_index, 12).value.__str__().strip()
 			desc        = xl_sheet.cell(row_index, 17).value.__str__().strip()
+			imdg        = xl_sheet.cell(row_index, 18).value.__str__().strip().replace('.0','')
+			un_no       = xl_sheet.cell(row_index, 19).value.__str__().strip().replace('.0','')
 			stowage		= xl_sheet.cell(row_index, 26).value.__str__().strip().replace('.0','')
 
 			if load_port !='THLCH':
@@ -356,14 +389,27 @@ def FileUpdate(request,slug):
 			# Get Disch Port Object
 			disport_obj,created = DischargePort.objects.get_or_create(name=dis_port)
 
-			c = Container.objects.create(bayplanfile=bayfile,item_no=item_count,
+			# c = Container.objects.create(bayplanfile=bayfile,item_no=item_count,
+			# 					container=vContainer,iso_code=iso,full=True if full=='Full' else False,
+			# 					partner=partner,weight=weight,
+			# 					load_port=load_port,dis_port=disport_obj,deliverly_port=delivery_port,
+			# 					good_desc=desc,
+			# 					stowage=stowage,bay=stowage[:1] if len(stowage)==5 else stowage[:2],
+			# 					original_stowage=stowage,original_bay=stowage[:1] if len(stowage)==5 else stowage[:2] )
+			container_slug = slugify("%s-%s" %(vContainer, item_count))
+			c = Container(bayplanfile=bayfile,item_no=item_count,
 								container=vContainer,iso_code=iso,full=True if full=='Full' else False,
+								slug=container_slug,
 								partner=partner,weight=weight,
 								load_port=load_port,dis_port=disport_obj,deliverly_port=delivery_port,
 								good_desc=desc,
 								stowage=stowage,bay=stowage[:1] if len(stowage)==5 else stowage[:2],
-								original_stowage=stowage,original_bay=stowage[:1] if len(stowage)==5 else stowage[:2] )
+								original_stowage=stowage,original_bay=stowage[:1] if len(stowage)==5 else stowage[:2] ,
+								imdg=imdg,un_no=un_no)
+
+			container_list.append(c)
 			# =============
+	Container.objects.bulk_create(container_list)
 
 	# Delete Updated-filename
 	bayfile.updated_filename = None

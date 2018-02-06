@@ -46,6 +46,9 @@ class Container(models.Model):
 	bay       =	models.CharField(max_length=10,blank=True, null=True)
 	original_bay       =	models.CharField(max_length=10,blank=True, null=True)
 	ready_to_load		= models.BooleanField(default=False)# Ready to UpLoad
+	imdg = models.CharField(max_length=10,blank=True, null=True)
+	un_no = models.CharField(max_length=10,blank=True, null=True)
+	on_deck = models.BooleanField(default=False)
 	uploaded = models.BooleanField(default=False)
 	upload_date = models.DateTimeField(blank=True, null=True)
 	created_date = models.DateTimeField(auto_now_add=True)
@@ -63,10 +66,14 @@ class Container(models.Model):
 			return ('style="background-color:%s" class="text-center"' % self.dis_port.color)
 
 	def get_tooltip(self):
-		return ('No :%s    \
-			Disch Port : %s \
-			Weight : %s Kgs    \
-			ISO: %s ,F/E : %s' % (self.container,self.dis_port,self.weight,self.iso_code,'FULL' if self.full else 'MTY'))
+		# return ('No :%s    \
+		# 	Disch Port : %s \
+		# 	Weight : %s Kgs    \
+		# 	ISO: %s ,F/E : %s' % (self.container,self.dis_port,self.weight,self.iso_code,'FULL' if self.full else 'MTY'))
+		if self.imdg :
+			return ('IMDG: %s ' % (self.imdg))
+		else:
+			return ('ISO: %s ,F/E : %s' % (self.iso_code,'FULL' if self.full else 'MTY'))
 
 
 def create_container_slug(instance, new_slug=None):
