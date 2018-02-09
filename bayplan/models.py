@@ -4,7 +4,7 @@ from django.utils.text import slugify
 from django.db.models.signals import pre_save
 from django.urls import reverse
 
-from django.db.models import Count,Sum,Min,Max
+from django.db.models import Count,Sum,Min,Max,Case,When,Value,IntegerField
 
 # Create your models here.
 class BayPlanFile(models.Model):
@@ -36,6 +36,27 @@ class BayPlanFile(models.Model):
 			total=Count('container')
 			)
 		return summary
+
+	def get_disport_summary(self):
+		summary = self.container_set.values('dis_port','iso_code').annotate(
+			total=Count('container'),
+			color = Max('dis_port__color'),
+			c_full = Sum(Case(When(full=True,then=Value(1)),default=Value(0),output_field=IntegerField())),
+			c_mty = Sum(Case(When(full=False,then=Value(1)),default=Value(0),output_field=IntegerField())),
+			# size45 = Sum(Case(When(activity='DRB',then=Value(1)),default=Value(0),output_field=IntegerField())),
+			).order_by('dis_port','iso_code')
+		return summary
+
+	def get_disport_bay(self):
+		summary = self.container_set.values('dis_port','bay').annotate(
+			total=Count('container'),
+			color = Max('dis_port__color')
+			).order_by('dis_port','bay')
+		return summary
+
+	# def get_dischart_style(self):
+	# 	if self.dis_port.color:
+	# 		return ('style="background-color:%s" class="text-center"' % self.dis_port.color)
 
 
 def create_bayplan_slug(instance, new_slug=None):
