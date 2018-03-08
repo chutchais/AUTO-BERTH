@@ -7,7 +7,7 @@ from django.http import HttpResponse
 import os.path
 from django.conf import settings
 
-from .models import ReportFile,Voy,cutoff
+from .models import ReportFile,Voy,cutoff,Service
 
 from django.shortcuts import get_object_or_404
 from django.views.generic import DetailView,CreateView,UpdateView,DeleteView
@@ -107,6 +107,18 @@ def index(request):
 	reports = ReportFile.objects.all().order_by('-modified_date')
 	return render(request, 'index.html', {'objs': reports})
 
+def export(request):
+	services = Service.objects.all()
+	date_from = request.GET.get('from')
+	date_to = request.GET.get('to')
+	service = request.GET.get('service')
+	qs =None
+	if date_to != None and date_from != None and service != None :
+		qs= Voy.objects.filter(service__name=service ,
+			eta__range=[date_from,date_to]).order_by('eta')
+		
+	return render(request, 'berth/export.html', {'services':services,
+		'qs':qs})
 
 
 
@@ -197,3 +209,5 @@ def cutoff(request):
 						'year':year,
 						'week':workweek,
 						'lastupdate':lastupdate})
+
+

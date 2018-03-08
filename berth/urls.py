@@ -11,6 +11,7 @@ urlpatterns = [
     url(r'cutoff/(?P<pk>\d+)/$', CutOffUpdateView.as_view(), name='cutoff-detail'),
     url(r'voy/(?P<slug>[-\w]+)/create/$',CutOffCreateView.as_view(),name='cutoff-create'),
     url(r'cutoff/$',views.cutoff, name='cutoff-home'),
+    url(r'export/$',views.export, name='export'),
 ]
 
 admin.site.site_header = 'Auto Berth Schedule'
