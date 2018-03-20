@@ -122,10 +122,18 @@
                   <!-- Chill -->
       
                     {% if not obj.has_cutoff %}
+                        {% get_fix_cutoff obj.service obj.etb  as NewCutDate %}
                         {% decrease_hour obj.etb 1 as delete_1 %}
-                        <!-- {{ delete_1|date:"d/m H:i"}} -->
                         {% is_overdue delete_1 as isOver %}
-                        <td {{isOver}} ><span class="text-nowrap">{{ delete_1|date:"d/m H:i"}}</span></td>
+                        {% is_Boom_or_Horn obj.service as IsBoomOrHorn %}
+                        {% is_overdue NewCutDate as isOverBoom %}
+                        
+                        {% if IsBoomOrHorn %}
+                          <td {{isOverBoom}} ><span class="text-nowrap">{{ NewCutDate|date:"d/m H:i"}}</span></td>
+                        {% else %}
+                          <td {{isOver}} ><span class="text-nowrap">{{ delete_1|date:"d/m H:i"}}</span></td>
+                        {% endif %}
+
                     {% else %}
                         <!-- New value from CutOff -->
                         {% if obj.cutoff_set.first.chilled_date %}
@@ -148,7 +156,18 @@
                     {% if not obj.has_cutoff %}
                       {% increase_hour obj.etb 1 as increase_1 %}
                       {% is_overdue increase_1 as isOver %}
-                      <td {{isOver}} ><span class="text-nowrap">{{ increase_1|date:"d/m H:i"}}</span></td>
+                      {% is_Boom_or_Horn obj.service as IsBoomOrHorn %}
+                      {% is_overdue NewCutDate as isOverBoom %}
+
+                      <!-- <td {{isOver}} ><span class="text-nowrap">{{ increase_1|date:"d/m H:i"}}</span></td> -->
+
+                      {% if IsBoomOrHorn %}
+                          <td {{isOverBoom}} ><span class="text-nowrap">{{ NewCutDate|date:"d/m H:i"}}</span></td>
+                        {% else %}
+                          <td {{isOver}} ><span class="text-nowrap">{{ increase_1|date:"d/m H:i"}}</span></td>
+                        {% endif %}
+
+
                     {% else %}
                         <!-- New value from CutOff -->
                       {% if obj.cutoff_set.first.durian_date %}

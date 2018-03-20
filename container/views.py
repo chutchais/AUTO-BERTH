@@ -21,7 +21,7 @@ from  bayplan.models import BayPlanFile
 
 
 
-under_deck = ['16','14','12','10','08','06','04','02']
+under_deck = ['18','16','14','12','10','08','06','04','02']
 over_deck =['94','92','90','88','86','84','82','80']
 
 tier1 =['16','14','12','10','08','06','04','02','00','01','03','05','07','09','11','13','15']
@@ -56,6 +56,7 @@ class ContainerUpdateView(LoginRequiredMixin,UpdateView):
 	def get_success_url(self,*args, **kwargs):
 		# print('Slug %s' % self.object.bayplanfile.slug)
 		mode = self.request.GET.get('mode')
+		view = self.request.GET.get('view')
 		print(mode)
 		slug =self.object.bayplanfile.slug
 		bay = self.object.bay
@@ -63,10 +64,10 @@ class ContainerUpdateView(LoginRequiredMixin,UpdateView):
 		if mode=='search':
 			query = self.request.GET.get('q')
 			url = reverse('container:bay',kwargs={'slug':slug})
-			url = '%s?q=%s' % (url , query)
+			url = '%s?q=%s&view=%s' % (url , query,view)
 		else :
 			url = reverse('container:detail',kwargs={'slug':slug,'bay':bay})
-			url = '%s?q=%s' % (url , self.object.container)
+			url = '%s?q=%s&view=%s' % (url , self.object.container,view)
 		
 		return url
 		# reverse_lazy('container:detail',kwargs={'slug':slug,'bay':bay},query={'q':self.object.container})
@@ -102,13 +103,14 @@ def ContainerRestore(request,slug):
 	bay = c.bay
 
 	mode = request.GET.get('mode')
+	view = request.GET.get('view')
 	if mode=='search':
 		query = request.GET.get('q')
 		url = reverse('container:bay',kwargs={'slug':slug})
-		url = '%s?q=%s' % (url , query)
+		url = '%s?q=%s&view=%s' % (url , query,view)
 	else:
 		url = reverse('container:detail',kwargs={'slug':slug,'bay':bay})
-		url = '%s?q=%s' % (url , c.container)
+		url = '%s?q=%s&view=%s' % (url , c.container,view)
 
 	return HttpResponseRedirect(url)
 
@@ -128,7 +130,7 @@ def BayRestore(request,slug,bay):
 	# slug = c.bayplanfile.slug
 	# bay = c.bay
 	url = reverse('container:detail',kwargs={'slug':slug,'bay':bay})
-	print (url)
+	# print (url)
 	# mode = request.GET.get('mode')
 	# if mode=='search':
 	# 	query = request.GET.get('q')
@@ -174,6 +176,12 @@ def BayReport(request,slug):
 	query = request.GET.get('q')
 	bayfile =BayPlanFile.objects.get(slug=slug)
 	c = Container.objects.filter(bayplanfile=bayfile)
+
+	view = request.GET.get('view','')
+	if view=='mobile':
+		fname='container/mobile_bay.html'
+	else:
+		fname='container/bay.html'
 	
 	if not query :
 		# Show Overall view
@@ -186,7 +194,7 @@ def BayReport(request,slug):
 
 		return render(
 			request,
-			'container/bay.html',
+			fname,
 			{
 			'bays': b,
 			'bayfile':bayfile,
@@ -198,7 +206,7 @@ def BayReport(request,slug):
 		qs = c.filter(container__icontains=query).order_by('container')
 		return render(
 			request,
-			'container/bay.html',
+			fname,
 			{
 			'bays': None,
 			'bayfile':bayfile,
@@ -216,6 +224,8 @@ def BayDetail(request,slug,bay):
 	mode = request.GET.get('mode','container')
 	print ('Mode:%s' % mode)
 
+	view = request.GET.get('view','')
+
 	bayfile =BayPlanFile.objects.get(slug=slug)
 	c = Container.objects.filter(bayplanfile=bayfile,bay=bay)
 
@@ -230,16 +240,43 @@ def BayDetail(request,slug,bay):
 
 
 	tier = tier1 #Default
-	for obj in c:
-		stack = obj.stowage[-2:]
-		col = obj.stowage[-4:3] if len(obj.stowage)==5 else obj.stowage[-4:4]
-		if col=='12' or col=='11' :
-			tier = tier2
+	# for obj in c:
+	# 	stack = obj.stowage[-2:]
+	# 	col = obj.stowage[-4:3] if len(obj.stowage)==5 else obj.stowage[-4:4]
+	# 	if col=='12' or col=='11' :
+	# 		tier = tier2
 		# print (obj.stowage,col,stack)
+
+	# Fit tier and Over/Under Deck(Row)
+	# Tier = row
+	# Stack = col
+	# Over Deck = Tier > 70
+	# Under Deck = Tier < 50
+	has_on_deck = False
+	has_under_deck = False
+	tier_test =[]
+	for obj in c:
+		row = obj.stowage[-2:]
+		if int(row) > 70:
+			has_on_deck = True
+		if int(row) < 30:
+			has_under_deck = True
+
+		col = obj.stowage[-4:4]
+		if not col in tier_test:
+			tier_test.append(col)
+	
+	# print ('Request by PC : %s' % request.user_agent.is_pc)
+
+	if view =='mobile':
+		fname='container/mobile_bay_detail.html'
+		tier =[x for x in tier if x in tier_test]
+	else:
+		fname='container/bay_detail.html'
 
 	return render(
 		request,
-		'container/bay_detail.html',
+		fname,
 		{
 		'container_list': c,
 		'has_change' :has_changes,
@@ -249,7 +286,9 @@ def BayDetail(request,slug,bay):
 		'over_deck':over_deck,
 		'tier': tier,
 		'q':query,
-		'mode': True if mode=='container' else False }
+		'mode': True if mode=='container' else False ,
+		'has_on_deck': has_on_deck,
+		'has_under_deck':has_under_deck}
 		)
 
 # filehandle.read()

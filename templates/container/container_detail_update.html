@@ -19,7 +19,7 @@
 	{% if object.original_stowage != object.stowage %}
 	<h3>Original Slot : {{ object.original_stowage }} 
 		<small><i>-- last modify : {{ object.modified_date }}</i>
-		| <a href="{% url 'container:container-restore' object.slug  %}?q={{ object.container }}">Move back to original slot</a>
+		| <a href="{% url 'container:container-restore' object.slug  %}?q={{ object.container }}&view={{ request.GET.view }}">Move back to original slot</a>
 		</small>
 	</h3>
 	
@@ -40,24 +40,13 @@
 	{% endif %}
 
 	{% if request.GET.mode == 'search' %} 
-		<a href="{% url 'container:bay' object.bayplanfile.slug %}?q={{ request.GET.q }}">cancel</a>
+		<a href="{% url 'container:bay' object.bayplanfile.slug %}?q={{ request.GET.q }}&view={{ request.GET.view}}">cancel</a>
 	{% else %}
-		<a href="{% url 'container:detail' object.bayplanfile.slug object.bay %}">cancel</a>
+		<a href="{% url 'container:detail' object.bayplanfile.slug object.bay %}?view={{ request.GET.view}}">cancel</a>
 	{% endif%}
 	<!-- BayReport,bay -->
 	</div>
-<!-- 	<p>[[bay]][[row]][[tier]] </p>
-	Bay  :<input v-model="bay"><br>
-	Row  :<input v-model="row"><br>
-	Tier :<input v-model="tier"><br>
 
-  	<div class="col-sm-6 col-sm-offset-3">
-      <h1>Get a Secret Chuck Norris Quote!</h1>
-      <button class="btn btn-warning" v-on:click="getQuote()">Get a Quote</button>
-      <div class="quote-area" v-if="quote">
-        <h2><blockquote>{{ quote }}</blockquote></h2>      
-      </div>
-    </div> -->
 
 </div>
 
@@ -67,13 +56,14 @@
 
 
 {% block java_content %}
-<!-- <script>
-$(document).ready(function(){
-    $("a").click(function(){
-        alert("The paragraph was clicked.");
-    });
-});
-</script> -->
+<script>
+	$(document).ready(function(){
+	    // $("a").click(function(){
+	    //     alert("The paragraph was clicked.");
+	    // });
+	    $('#id_stowage').attr('type', 'tel');
+	});
+</script>
 <script>
 
 	$(function() {

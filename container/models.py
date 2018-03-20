@@ -71,9 +71,11 @@ class Container(models.Model):
 		# 	Weight : %s Kgs    \
 		# 	ISO: %s ,F/E : %s' % (self.container,self.dis_port,self.weight,self.iso_code,'FULL' if self.full else 'MTY'))
 		if self.imdg :
-			return ('IMDG: %s ' % (self.imdg))
+			# return ('IMDG: %s ' % (self.imdg))
+			return ('%s' % (self.container))#for mobie
 		else:
-			return ('ISO: %s ,F/E : %s' % (self.iso_code,'FULL' if self.full else 'MTY'))
+			return ('%s' % (self.container))#for mobie
+			# return ('ISO: %s ,F/E : %s' % (self.iso_code,'FULL' if self.full else 'MTY'))
 
 
 def create_container_slug(instance, new_slug=None):

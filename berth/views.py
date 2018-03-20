@@ -103,9 +103,16 @@ class CutOffDeleteView(LoginRequiredMixin,DeleteView):
 #     response['Content-Disposition'] = 'attachment; filename=test.xlsm'
 #     xls.save(response)
 #     return response
+
+def mobile_index(request):
+	return render(request, 'berth/mobile_bayplan_index.html', {})
+
+
+
 def index(request):
 	reports = ReportFile.objects.all().order_by('-modified_date')
 	return render(request, 'index.html', {'objs': reports})
+
 
 def export(request):
 	services = Service.objects.all()

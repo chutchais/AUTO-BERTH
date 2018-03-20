@@ -127,6 +127,11 @@ def decrease_hour(date_in,hour):
 def increase_hour(date_in,hour):
 	return date_in + timedelta(hours=hour)
 
+@register.assignment_tag
+def is_Boom_or_Horn(service):
+	strService = service.__str__()
+	# print (strService)
+	return True if strService in ['BOOM','HORN'] else False
 
 @register.assignment_tag
 # ['BOOM','HORN','SE1','ANX'.'TR1','NTX','PH4','IA2']
@@ -142,10 +147,12 @@ def get_fix_cutoff(service,perform_date):
 	Sunday = firstday + datetime.timedelta(days=6) #datetime.timedelta( (6-firstday.weekday()) % 7 )
 	# print ('Get Fix %s' % strService)
 	if 'BOOM' in strService :
-		return Saturday.replace(hour=5, minute=00)
+		# return Saturday.replace(hour=5, minute=00) #Change on March 20,2018
+		return Friday.replace(hour=20, minute=00)
 
 	if 'HORN' in strService :
-		return Saturday.replace(hour=12, minute=00)
+		# return Saturday.replace(hour=12, minute=00) #Change on March 20,2018
+		return Sunday.replace(hour=4, minute=00)
 
 	if 'SE1' in strService :
 		# print (Thursday)

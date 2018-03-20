@@ -119,6 +119,10 @@ def index(request):
 	# import datetime
 	year = request.GET.get('year', '')
 	workweek = request.GET.get('week', '')
+
+	# Display Mode (Desk top or Mobile)
+	view = request.GET.get('view', '')
+
 	if workweek=='' and year=='':
 		# Use current week
 		today= datetime.date.today()
@@ -140,6 +144,7 @@ def index(request):
 		# Q(etd__range=[from_date,to_date]),
 		terminal='B1',
 		vessel__v_type='VESSEL',
+		load_no__gt=0,
 		draft=False).exclude(service__name__icontains='DIS').order_by('etb')
 
 
@@ -148,6 +153,7 @@ def index(request):
 		# Q(etd__range=[from_date,to_date]),
 		terminal__name__icontains ='A',
 		vessel__v_type='VESSEL',
+		load_no__gt=0,
 		draft=False).exclude(
 			service__name__icontains='DIS'
 		).order_by('etb')
@@ -165,9 +171,14 @@ def index(request):
 		draft=False).exclude(service__name__icontains='DIS').order_by('-modified_date')
 
 	lastupdate = c.first()
-	print ('Last update %s' % lastupdate)
+	# print ('Last update %s' % lastupdate)
 
-	return render(request, 'bayplan/bayplan_index.html', {'A':a,
+	if view =='mobile':
+		fname = 'bayplan/mobile_bayplan_index.html'
+	else:
+		fname = 'bayplan/bayplan_index.html'
+
+	return render(request, fname, {'A':a,
 						'B':b,
 						'year':year,
 						'week':workweek,
