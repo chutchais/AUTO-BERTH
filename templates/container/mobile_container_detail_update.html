@@ -17,7 +17,7 @@
 	{% if object.original_stowage != object.stowage %}
 	<h3>Original Slot : {{ object.original_stowage }} 
 		<small><i>-- last modify : {{ object.modified_date }}</i>
-		| <a href="{% url 'container:container-restore' object.slug  %}?q={{ object.container }}&view={{ request.GET.view }}">Move back to original slot</a>
+		| <a href="{% url 'container:container-restore' object.slug  %}?q={{ object.container }}&view={{ request.GET.view }}&pos={{ request.GET.pos }}">Move back to original slot</a>
 		</small>
 	</h3>
 	
@@ -45,9 +45,52 @@
 	<!-- BayReport,bay -->
 	</div>
 
+	{% if request.GET.view == 'mobile' %}
+	<h3>Bay : {{bay}} -- Select new Slot </h3>
+	<table class="table table-bordered">
+					<!-- Under Deck -->
 
-	
+					 <!-- Tier Information -->
+					<tr class="active">
+						<th></th>
+						{% for t in tier %}
+							 <th class="text-center">{{t}}</th>
+						{% endfor %} 
+				    </tr>
+				    <!-- End Tier information -->
 
+				     <!-- Row/Stack Information -->
+				     
+					     {% for row in deck %}
+						<tr>
+							<td class="text-center">{{row}}</td>
+
+							{% for t in tier %}
+								{% combine_stowage bay t row as new_stowage %}
+								
+									{% if new_stowage == object.stowage %}
+										<td class="text-center danger">
+											Current
+										</td>
+									{% elif new_stowage == object.original_stowage %}
+										<td class="text-center success">
+											<a href="{% url 'container:container-restore' object.slug %}?q={{ object.container }}&view={{ request.GET.view }}&pos={{request.GET.pos}}">Original</a>
+										</td>
+									{% else %}
+										<td class="text-center">
+										<a href="{% url 'container:container-move' object.slug new_stowage %}?q={{ object.container }}&view={{ request.GET.view }}&pos={{request.GET.pos}}">{{t}}{{row}}</a>
+										</td>					
+									{% endif %}
+
+							{% endfor %}
+
+						 </tr>
+						{% endfor %}
+
+
+				</table>
+
+			{% endif %}
 </div>
 
 

@@ -35,9 +35,51 @@ class ContainerDetailView(LoginRequiredMixin,DetailView):
 	# 	slug = self.kwargs['slug']
 	# 	return Container.objects.filter(slug=slug)
 
+class MobileContainerUpdateView(LoginRequiredMixin,UpdateView):
+	model = Container
+	template_name = 'container/mobile_container_detail_update.html'
+	
+	form_class = ContainerForm
+
+	def get_context_data(self, **kwargs):
+		context = super(ContainerUpdateView, self).get_context_data(**kwargs)
+		context['bay'] = self.request.GET.get('bay')
+		# print (self.object.bay)
+		# get Row
+		row = self.object.stowage[-2:]
+		if  row in over_deck :
+			context['deck'] = over_deck
+		else :
+			context['deck'] = under_deck
+
+		context['tier'] = tier1
+		context['pos'] = self.request.GET.get('pos')
+		# print (self.object.bay)
+		return context
+
+	def get_success_url(self,*args, **kwargs):
+		# print('Slug %s' % self.object.bayplanfile.slug)
+		mode = self.request.GET.get('mode')
+		view = self.request.GET.get('view')
+		pos  = self.request.GET.get('pos')
+		# print(mode)
+		slug =self.object.bayplanfile.slug
+		bay = self.object.bay
+		# print ('Bay %s'% bay)
+		if mode=='search':
+			query = self.request.GET.get('q')
+			url = reverse('container:bay',kwargs={'slug':slug})
+			url = '%s?q=%s&view=%s&pos=%s' % (url , query,view,pos)
+		else :
+			url = reverse('container:detail',kwargs={'slug':slug,'bay':bay})
+			url = '%s?q=%s&view=%s&pos=%s' % (url , self.object.container,view,pos)
+		
+		return url
+
 class ContainerUpdateView(LoginRequiredMixin,UpdateView):
 	model = Container
-	template_name = 'container/container_detail_update.html'
+	template_name = 'container/mobile_container_detail_update.html'
+	
 	form_class = ContainerForm
 	# success_url = reverse_lazy('container:detail',kwargs={})
 
@@ -50,24 +92,48 @@ class ContainerUpdateView(LoginRequiredMixin,UpdateView):
 	# Comment on Feb 2,2018 -- To improve Save speed
 	# def get_form_kwargs(self):
 	# 	kwargs = super(ContainerUpdateView,self).get_form_kwargs()
-	# 	kwargs['stowage'] = self.object.stowage
+	# 	# kwargs['stowage'] = self.object.stowage
+	# 	print(self.request.GET.get('view'))
 	# 	return kwargs
+
+	def get_context_data(self, **kwargs):
+		context = super(ContainerUpdateView, self).get_context_data(**kwargs)
+		context['bay'] = self.request.GET.get('bay')
+		# print (self.object.bay)
+		# get Row
+		row = self.object.stowage[-2:]
+		if  row in over_deck :
+			context['deck'] = over_deck
+		else :
+			context['deck'] = under_deck
+
+		context['tier'] = tier1
+		context['pos'] = self.request.GET.get('pos')
+		# print (self.object.bay)
+		return context
+		# if 'bay' in self.kwargs:
+			
+
+		    # context['object'] = get_object_or_404(MyObject, slug=self.kwargs['slug'])
+		#     context['objects'] = get_objects_by_user(self.request.user)
+		
 
 	def get_success_url(self,*args, **kwargs):
 		# print('Slug %s' % self.object.bayplanfile.slug)
 		mode = self.request.GET.get('mode')
 		view = self.request.GET.get('view')
-		print(mode)
+		pos  = self.request.GET.get('pos')
+		# print(mode)
 		slug =self.object.bayplanfile.slug
 		bay = self.object.bay
 		# print ('Bay %s'% bay)
 		if mode=='search':
 			query = self.request.GET.get('q')
 			url = reverse('container:bay',kwargs={'slug':slug})
-			url = '%s?q=%s&view=%s' % (url , query,view)
+			url = '%s?q=%s&view=%s&pos=%s' % (url , query,view,pos)
 		else :
 			url = reverse('container:detail',kwargs={'slug':slug,'bay':bay})
-			url = '%s?q=%s&view=%s' % (url , self.object.container,view)
+			url = '%s?q=%s&view=%s&pos=%s' % (url , self.object.container,view,pos)
 		
 		return url
 		# reverse_lazy('container:detail',kwargs={'slug':slug,'bay':bay},query={'q':self.object.container})
@@ -96,6 +162,7 @@ def ContainerRestore(request,slug):
 	c = Container.objects.get(slug=slug)
 	c.stowage = c.original_stowage
 	c.bay = c.original_bay
+	c.ready_to_load = False
 	c.save()
 
 
@@ -104,15 +171,44 @@ def ContainerRestore(request,slug):
 
 	mode = request.GET.get('mode')
 	view = request.GET.get('view')
+	pos = request.GET.get('pos')
 	if mode=='search':
 		query = request.GET.get('q')
 		url = reverse('container:bay',kwargs={'slug':slug})
-		url = '%s?q=%s&view=%s' % (url , query,view)
+		url = '%s?q=%s&view=%s&pos=%s' % (url , query,view,pos)
 	else:
 		url = reverse('container:detail',kwargs={'slug':slug,'bay':bay})
-		url = '%s?q=%s&view=%s' % (url , c.container,view)
+		url = '%s?q=%s&view=%s&pos=%s' % (url , c.container,view,pos)
 
 	return HttpResponseRedirect(url)
+
+def ContainerMove(request,slug,slot):
+	if not request.user.is_authenticated:
+		return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
+
+	# print (slug,slot)
+	c = Container.objects.get(slug=slug)
+	c.stowage = slot
+	c.ready_to_load = True
+	c.save()
+
+
+	slug = c.bayplanfile.slug
+	bay = c.bay
+
+	mode = request.GET.get('mode')
+	view = request.GET.get('view')
+	pos = request.GET.get('pos')
+	if mode=='search':
+		query = request.GET.get('q')
+		url = reverse('container:bay',kwargs={'slug':slug})
+		url = '%s?q=%s&view=%&pos=%s' % (url , query,view,pos)
+	else:
+		url = reverse('container:detail',kwargs={'slug':slug,'bay':bay})
+		url = '%s?q=%s&view=%s&pos=%s' % (url , c.container,view,pos)
+
+	return HttpResponseRedirect(url)
+
 
 def BayRestore(request,slug,bay):
 	if not request.user.is_authenticated:
@@ -175,7 +271,7 @@ def BayReport(request,slug):
 	# print(slug)
 	query = request.GET.get('q')
 	bayfile =BayPlanFile.objects.get(slug=slug)
-	c = Container.objects.filter(bayplanfile=bayfile)
+	c = Container.objects.filter(bayplanfile__slug=slug)
 
 	view = request.GET.get('view','')
 	if view=='mobile':
@@ -191,6 +287,7 @@ def BayReport(request,slug):
 			ready=Sum(Case(When( ready_to_load = True,then=Value(1)),default=Value(0),output_field=IntegerField()))
 			)
 		dup = c.values('stowage','bay').annotate(number=Count('container')).exclude(number=1)
+		# print (Container.objects.filter(bayplanfile__slug=slug,stowage='270708'))
 
 		return render(
 			request,
@@ -222,12 +319,28 @@ def BayDetail(request,slug,bay):
 
 	query = request.GET.get('q',None)
 	mode = request.GET.get('mode','container')
-	print ('Mode:%s' % mode)
+	# print ('Mode:%s' % mode)
 
 	view = request.GET.get('view','')
+	pos = request.GET.get('pos','')
 
-	bayfile =BayPlanFile.objects.get(slug=slug)
-	c = Container.objects.filter(bayplanfile=bayfile,bay=bay)
+	# bayfile =BayPlanFile.objects.get(slug=slug)
+	if view == 'mobile':
+		c = Container.objects.filter(bayplanfile__slug=slug,bay=bay,ready_to_load=True)
+	else:
+		c = Container.objects.filter(bayplanfile__slug=slug,bay=bay)
+	
+
+	if c :
+		c_slot_list = c.values_list('stowage', flat=True)
+		c_list = list(c)
+	else:
+		c_slot_list=[]
+		c_list=[]
+
+	c_master = Container.objects.filter(bayplanfile__slug=slug,original_bay=bay)
+	c_master_slot_list = c_master.values_list('original_stowage', flat=True)
+	c_master_list = list(c_master)
 
 
 
@@ -240,12 +353,6 @@ def BayDetail(request,slug,bay):
 
 
 	tier = tier1 #Default
-	# for obj in c:
-	# 	stack = obj.stowage[-2:]
-	# 	col = obj.stowage[-4:3] if len(obj.stowage)==5 else obj.stowage[-4:4]
-	# 	if col=='12' or col=='11' :
-	# 		tier = tier2
-		# print (obj.stowage,col,stack)
 
 	# Fit tier and Over/Under Deck(Row)
 	# Tier = row
@@ -255,7 +362,7 @@ def BayDetail(request,slug,bay):
 	has_on_deck = False
 	has_under_deck = False
 	tier_test =[]
-	for obj in c:
+	for obj in c_master:
 		row = obj.stowage[-2:]
 		if int(row) > 70:
 			has_on_deck = True
@@ -270,21 +377,47 @@ def BayDetail(request,slug,bay):
 
 	if view =='mobile':
 		fname='container/mobile_bay_detail.html'
-		tier =[x for x in tier if x in tier_test]
+		# tier =[x for x in tier if x in tier_test]
 	else:
 		fname='container/bay_detail.html'
+
+	# Show Under Deck First ,if exist
+	
+	# print (pos)
+	if pos == '':
+		if has_under_deck :
+			deck = under_deck
+			deck_pos = 'UD'
+			pos='UD'
+		else :
+			deck = over_deck
+			deck_pos = 'OD'
+			pos='OD'
+	else:
+		# print(pos)
+		deck_pos = pos
+		deck = under_deck if pos == 'UD' else over_deck
+
 
 	return render(
 		request,
 		fname,
 		{
 		'container_list': c,
+		'container_slot_list': c_slot_list,
+		'container_obj_list': c_list,
 		'has_change' :has_changes,
-		'obj':bayfile,
+		'slug':slug,
 		'bay': bay,
+		'deck' : deck,
+		'pos' : deck_pos,
+		'master_plan':c_master,
+		'master_slot_list': c_master_slot_list,
+		'master_obj_list': c_master_list,
 		'under_deck': under_deck,
 		'over_deck':over_deck,
 		'tier': tier,
+		'full_tier': tier1,
 		'q':query,
 		'mode': True if mode=='container' else False ,
 		'has_on_deck': has_on_deck,

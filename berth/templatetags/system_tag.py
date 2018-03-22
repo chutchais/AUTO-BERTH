@@ -47,10 +47,40 @@ def combine_stowage(bay,tier,row):
 def first_container(obj,stowage):
 	return obj.filter(stowage=stowage).first()
 
+@register.assignment_tag
+def original_container(obj,stowage):
+	return obj.filter(original_stowage=stowage).first()
+
+@register.assignment_tag
+def get_container_by_original_stowage(obj_list,slot):
+	for obj in obj_list:
+		if obj.original_stowage == slot:
+			return obj
+
+@register.assignment_tag
+def get_container_by_stowage(obj_list,slot):
+	for obj in obj_list:
+		if obj.stowage == slot:
+			# print (obj.container,obj.get_dischart_style)
+			return obj
+	# return obj.filter(original_stowage=stowage).first()
 
 @register.filter
 def in_stowage(obj, stowage):
     return obj.filter(stowage = stowage)
+
+@register.filter
+def in_stowage_list(obj_list, slot):
+	objQ=[]
+	for obj in obj_list:
+		if obj.stowage == slot:
+			objQ.append(obj)
+	# print (objQ)
+	return objQ
+
+@register.filter
+def original_stowage(obj, stowage):
+    return obj.filter(original_stowage = stowage)
 
 @register.filter
 def in_bay(obj, bay):

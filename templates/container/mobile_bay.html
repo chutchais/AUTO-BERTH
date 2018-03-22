@@ -52,6 +52,29 @@
 	                	</a>
 	                  {% endfor %}
 	        </div>
+
+	        <hr/>
+			{% if dups %}
+			
+				<div class="col-xs-12 col-sm-12">
+						<h3>Duplicated Slot</h3>
+						<table class="table table-bordered">
+							<tr>
+								<th>#Slot</th>
+						        <th>#Container</th>
+						     
+						      </tr>
+						      {% for obj in dups %}
+							<tr>
+								<td><a href="{% url 'container:detail' bayfile.slug obj.bay %}?view=mobile">{{obj.stowage}}</a></td>
+								<td>{{obj.number}}</td>
+								
+							 </tr>
+							 {% endfor %}
+						</table>
+				</div>
+			
+			{% endif %}
 		{% endif %}
 
 		<!-- Search Result table -->
@@ -99,6 +122,8 @@
 		</div>
 		{% endif %}
 
+		
+		
 		<hr/>
 		<h3>Logs</h3>
   </div>
