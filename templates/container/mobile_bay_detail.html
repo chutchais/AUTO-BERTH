@@ -105,7 +105,7 @@
 {% block content %}
 
 <div class="row">
-		<a href="{% url 'container:bay' slug %}?view=mobile">Select new Bay</a>
+		<h2><a href="{% url 'container:bay' slug %}?view=mobile">Select new Bay</a></h2>
 		
 
 		<h3>Bay : {{bay}} -- 
@@ -159,11 +159,11 @@
 													<div class="text-nowrap">
 														
 																{% if first_cont.ready_to_load %}
-																	{{first_cont.container|slice:":1"}}...{{first_cont.container|slice:"7:" }}
+																	{{first_cont.container|slice:":3"}}..{{first_cont.container|slice:"7:" }}
 																{% else %}
 																	<a href="{{ first_cont.get_absolute_url }}?view=mobile&bay={{bay}}&pos={{pos}}" 
 																		data-tooltip="{{first_cont.get_tooltip|safe}}">
-																		{{first_cont.container|slice:":1"}}...{{first_cont.container|slice:"7:" }}
+																		{{first_cont.container|slice:":3"}}..{{first_cont.container|slice:"7:" }}
 																		
 																	</a>
 																{% endif %}
@@ -238,7 +238,7 @@
 														<a href="{{ x.get_absolute_url }}?view=mobile&bay={{bay}}&pos={{pos}}" 
 															data-tooltip="{{x.get_tooltip|safe}}">
 															{% if mode  %}
-																{{x.container|slice:":1" }}...{{x.container|slice:"7:" }}
+																{{x.container|slice:":3" }}..{{x.container|slice:"7:" }}
 															{% else %}
 																{{new_weight }}
 															{% endif %}
@@ -248,7 +248,7 @@
 													<a href="{{ x.get_absolute_url }}?view=mobile&bay={{bay}}&pos={{pos}}" 
 															data-tooltip="{{x.get_tooltip|safe}}">
 															{% if mode  %}
-																{{x.container|slice:":1" }}...{{x.container|slice:"7:" }}
+																{{x.container|slice:":3" }}..{{x.container|slice:"7:" }}
 															{% else %}
 																{{new_weight }}
 															{% endif %}

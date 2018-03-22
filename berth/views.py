@@ -179,36 +179,59 @@ def cutoff(request):
 	# wk = from_date.isocalendar()[1]
 	# ------------
 
+	# b = Voy.objects.filter(
+	# 	Q(etb__range=[from_date,to_date]),
+	# 	# Q(etd__range=[from_date,to_date]),
+	# 	terminal='B1',
+	# 	vessel__v_type='VESSEL',
+	# 	draft=False).exclude(service__name__icontains='DIS').order_by('etb')
+
 	b = Voy.objects.filter(
 		Q(etb__range=[from_date,to_date]),
 		# Q(etd__range=[from_date,to_date]),
 		terminal='B1',
 		vessel__v_type='VESSEL',
-		draft=False).exclude(service__name__icontains='DIS').order_by('etb')
+		draft=False).exclude(load_no=0).order_by('etb')
+
+	# .values('vessel','code','voy','service','etd','etb','slug')
+	# b_obj_list =list(b)
+	# print (b_obj_list)
 
 
+	# a = Voy.objects.filter(
+	# 	Q(etb__range=[from_date,to_date]),
+	# 	# Q(etd__range=[from_date,to_date]),
+	# 	terminal__name__icontains ='A',
+	# 	vessel__v_type='VESSEL',
+	# 	draft=False).exclude(
+	# 		service__name__icontains='DIS'
+	# 	).order_by('etb')
 	a = Voy.objects.filter(
 		Q(etb__range=[from_date,to_date]),
-		# Q(etd__range=[from_date,to_date]),
 		terminal__name__icontains ='A',
 		vessel__v_type='VESSEL',
-		draft=False).exclude(
-			service__name__icontains='DIS'
-		).order_by('etb')
+		draft=False).exclude(load_no=0).order_by('etb')
 
-	# lastupdate = Voy.objects.filter(
+	# .values('vessel','code','voy','service','etd','etb','slug')
+	# a_obj_list =list(a)
+	# Comment on March 22,2018
+	# To import performance
+	# c = Voy.objects.filter(
 	# 	Q(etb__range=[from_date,to_date]),
+	# 	Q(terminal='B1')|
+	# 	Q(terminal__name__icontains='A'),
 	# 	vessel__v_type='VESSEL',
-	# 	draft=False).exclude(service__name__icontains='DIS').order_by('etb').aggregate(Max('modified_date'))
-
+	# 	draft=False).exclude(service__name__icontains='DIS').order_by('-modified_date').values('vessel','code','voy','modified_date')
 	c = Voy.objects.filter(
 		Q(etb__range=[from_date,to_date]),
-		Q(terminal='B1')|
-		Q(terminal__name__icontains='A'),
 		vessel__v_type='VESSEL',
-		draft=False).exclude(service__name__icontains='DIS').order_by('-modified_date')
+		draft=False).exclude(
+			terminal='B2',load_no=0).order_by('-modified_date').values(
+				'vessel','code','voy','modified_date')
 
-	lastupdate = c.first()
+	c_obj_list =list(c)
+	lastupdate = c_obj_list[0]
+	# lastupdate = c.first()
 	# print ('Last update %s' % lastupdate)
 
 	return render(request, 'cutoff.html', {'A':a,

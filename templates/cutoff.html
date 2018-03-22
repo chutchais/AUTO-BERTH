@@ -36,6 +36,7 @@
       </tr>
 
              {% for obj in B %}
+               
                {% is_fix_cutoff obj.service as IsCutOff %}
                {% is_arrive obj.etb obj.etd as IsArrive %}
                {% cut obj.service as newService %}

@@ -98,7 +98,8 @@ class ContainerUpdateView(LoginRequiredMixin,UpdateView):
 
 	def get_context_data(self, **kwargs):
 		context = super(ContainerUpdateView, self).get_context_data(**kwargs)
-		context['bay'] = self.request.GET.get('bay')
+		bay = self.request.GET.get('bay')
+		context['bay'] = bay
 		# print (self.object.bay)
 		# get Row
 		row = self.object.stowage[-2:]
@@ -109,6 +110,12 @@ class ContainerUpdateView(LoginRequiredMixin,UpdateView):
 
 		context['tier'] = tier1
 		context['pos'] = self.request.GET.get('pos')
+
+		c_master = Container.objects.filter(bayplanfile__slug=self.object.bayplanfile.slug,original_bay=bay)
+		c_master_slot_list = c_master.values_list('original_stowage', flat=True)
+		# c_master_list = list(c_master)
+		context['master_plan'] = c_master_slot_list
+
 		# print (self.object.bay)
 		return context
 		# if 'bay' in self.kwargs:
