@@ -5,7 +5,12 @@
 {% endblock head %}
 
 {% block title %}
-	Bay Plan
+	Bay : {{ bay}} - 
+	{% if pos == 'UD' %}
+		Under deck
+	{% else %}
+		Over deck
+	{% endif %}
 {% endblock %}
 
 {% block stylesheet %}
@@ -105,26 +110,24 @@
 {% block content %}
 
 <div class="row">
-		<h2><a href="{% url 'container:bay' slug %}?view=mobile">Select new Bay</a></h2>
-		
-
 		<h3>Bay : {{bay}} -- 
 						{% if pos == 'UD' %}
 							Under Deck  
 							{% if has_on_deck %}
-								| <a href="?view=mobile&pos=OD"><small>Over Deck</small></a>
+								| <a href="?view=mobile&pos=OD">Over Deck</a>
 							{% endif %}
 						{% else %}
 							 Over Deck 
 							 {% if has_under_deck %}
-								| <a href="?view=mobile&pos=UD"><small>Under Deck</small></a>
+								| <a href="?view=mobile&pos=UD">Under Deck</a>
 							{% endif %}
 						{% endif %}
-					</h3></hr>
+					 </h3>
+				</hr>
 
 
 			{% if master_plan %}
-				<h3>Master Plan </h3>
+				<h3>Master Plan | <a href="{% url 'container:bay' slug %}?view=mobile">Switch new Bay</a></h3>
 				<table class="table table-bordered">
 					<tr class="active">
 						<th></th>
@@ -202,7 +205,7 @@
 			{% endif %}
 
 
-		<h3>Current Status </h3>
+		<h3>Current Status | <a href="{% url 'container:bay' slug %}?view=mobile">Switch new Bay</a></h3>
 		<table class="table table-bordered">
 
 					<tr class="active">

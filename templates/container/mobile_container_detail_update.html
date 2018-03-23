@@ -5,7 +5,7 @@
 {% endblock head %}
 
 {% block title %}
-    Berth Schedule Report
+    Change Slot
 {% endblock %}
 
 
@@ -20,37 +20,19 @@
 		| <a href="{% url 'container:container-restore' object.slug  %}?q={{ object.container }}&view={{ request.GET.view }}&pos={{ request.GET.pos }}">Move back to original slot</a>
 		</small>
 	</h3>
-	
-	
-	{% endif %}
-	<h4>Dis-charge Port : {{ object.dis_port }}</h4>
-	<hr/>
-	<h3>Change to new Slot </h3>
-
-	
-
-	{% include 'snippets/form_snippet.html' with form=form %}
-	
-	{% if form.errors.non_field_errors %}
-	<div class="alert alert-danger" role="alert">
-		{{ form.errors.non_field_errors }}
-	</div>
 	{% endif %}
 
 	<h2>
-	{% if request.GET.mode == 'search' %} 
-		<a href="{% url 'container:bay' object.bayplanfile.slug %}?q={{ request.GET.q }}&view={{ request.GET.view}}&pos={{pos}}">cancel</a>
-	{% else %}
-		<a href="{% url 'container:detail' object.bayplanfile.slug object.bay %}?view={{ request.GET.view}}&pos={{pos}}">cancel</a>
-	{% endif%}
+		{% if request.GET.mode == 'search' %} 
+			<a href="{% url 'container:bay' object.bayplanfile.slug %}?q={{ request.GET.q }}&view={{ request.GET.view}}&pos={{pos}}">Cancel</a>
+		{% else %}
+			<a href="{% url 'container:detail' object.bayplanfile.slug object.bay %}?view={{ request.GET.view}}&pos={{pos}}">Cancel</a>
+		{% endif%}
 	</h2>
-	<!-- BayReport,bay -->
-	</div>
 
 	{% if request.GET.view == 'mobile' %}
-	<h3>Bay : {{bay}} -- Select new Slot </h3>
-
-	<table class="table table-bordered">
+	
+		<table class="table table-bordered">
 
 					<tr class="active">
 						<th></th>
@@ -68,16 +50,16 @@
 									{% if new_stowage in master_plan %}
 										{% if new_stowage == object.stowage %}
 											<td class="text-center danger">
-												<h3>Current</h3>
+												<h3><a href="{% url 'container:container-move' object.slug new_stowage %}?q={{ object.container }}&view={{ request.GET.view }}&pos={{request.GET.pos}}">Current</a></h3>
 											</td>
 										{% elif new_stowage == object.original_stowage %}
 											<td class="text-center success">
-												<h2><a href="{% url 'container:container-restore' object.slug %}?q={{ object.container }}&view={{ request.GET.view }}&pos={{request.GET.pos}}">Original</a></h2>
+												<h3><a href="{% url 'container:container-restore' object.slug %}?q={{ object.container }}&view={{ request.GET.view }}&pos={{request.GET.pos}}">Original</a></h3>
 											</td>
 										{% else %}
 											<td class="text-center">
-											<h2><a href="{% url 'container:container-move' object.slug new_stowage %}?q={{ object.container }}&view={{ request.GET.view }}&pos={{request.GET.pos}}">{{t}}{{row}}</a>
-											</td></h2>				
+											<h3><a href="{% url 'container:container-move' object.slug new_stowage %}?q={{ object.container }}&view={{ request.GET.view }}&pos={{request.GET.pos}}">{{t}}{{row}}</a>
+											</td></h3>				
 										{% endif %}
 									{% else %}
 										<td></td>
@@ -92,6 +74,30 @@
 				</table>
 
 			{% endif %}
+
+	<h4>Dis-charge Port : {{ object.dis_port }}</h4>
+	<hr/>
+	<h3>Change to new Slot </h3>
+
+	{% include 'snippets/form_snippet.html' with form=form %}
+	
+	{% if form.errors.non_field_errors %}
+	<div class="alert alert-danger" role="alert">
+		{{ form.errors.non_field_errors }}
+	</div>
+	{% endif %}
+
+	<h2>
+	{% if request.GET.mode == 'search' %} 
+		<a href="{% url 'container:bay' object.bayplanfile.slug %}?q={{ request.GET.q }}&view={{ request.GET.view}}&pos={{pos}}">Cancel</a>
+	{% else %}
+		<a href="{% url 'container:detail' object.bayplanfile.slug object.bay %}?view={{ request.GET.view}}&pos={{pos}}">Cancel</a>
+	{% endif%}
+	</h2>
+	<!-- BayReport,bay -->
+	</div>
+
+	
 </div>
 
 

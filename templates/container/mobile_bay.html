@@ -5,7 +5,7 @@
 {% endblock head %}
 
 {% block title %}
-    Bay Plan
+    {{ bayfile.voy }}
 {% endblock %}
 
 
@@ -91,8 +91,9 @@
 				        <th></th>
 				      </tr>
 				      {% for obj in container_list %}
+				      		{% get_position_by_stowage obj.stowage as pos %}
 					<tr>
-						<td {{obj.get_dischart_style|safe }}><a href="{% url 'container:detail' bayfile.slug obj.bay %}?q={{obj.container}}&view=mobile">{{obj.container}}</a>
+						<td {{obj.get_dischart_style|safe }}><a href="{% url 'container:detail' bayfile.slug obj.bay %}?q={{obj.container}}&view=mobile&bay={{obj.bay}}&pos={{pos}}">{{obj.container}}</a>
 							<small><small>
 												{% if obj.iso_code == "45R1"  %}
 														<span class="glyphicon glyphicon-registration-mark icon-1x"></span>
@@ -114,7 +115,7 @@
 							</small>
 							{% endif %}
 						</td>
-						<td><a href="{{ obj.get_absolute_url }}?mode=search&q={{ request.GET.q }}&view=mobile">Change slot</a></td>
+						<td><a href="{{ obj.get_absolute_url }}?mode=search&q={{ request.GET.q }}&view=mobile&bay={{obj.bay}}">Change slot</a></td>
 					 </tr>
 					 {% endfor %}
 				</table>

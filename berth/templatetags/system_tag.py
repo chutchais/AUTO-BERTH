@@ -63,7 +63,15 @@ def get_container_by_stowage(obj_list,slot):
 		if obj.stowage == slot:
 			# print (obj.container,obj.get_dischart_style)
 			return obj
-	# return obj.filter(original_stowage=stowage).first()
+
+@register.assignment_tag
+def get_position_by_stowage(slot):
+	row = slot[-2:]
+	if int(row) > 70:
+		return 'OD'
+	if int(row) < 30:
+		return 'UD'
+
 
 @register.filter
 def in_stowage(obj, stowage):
