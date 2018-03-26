@@ -405,6 +405,8 @@ def BayDetail(request,slug,bay):
 		deck_pos = pos
 		deck = under_deck if pos == 'UD' else over_deck
 
+	
+
 
 	return render(
 		request,
