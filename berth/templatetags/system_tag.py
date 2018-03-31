@@ -127,6 +127,11 @@ def is_overdue(perform_date):
 	import datetime
 	now = datetime.datetime.now()
 
+	# print (perform_date)
+	if perform_date == None:
+		print ('perform_date is None')
+		return ''
+
 	if perform_date < now:
 		# print((now-perform_date).total_seconds()/60)
 		return 'class= danger'
