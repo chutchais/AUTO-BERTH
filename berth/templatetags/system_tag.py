@@ -19,7 +19,17 @@ def is_readytoload(load_number):
 		vColor='danger'
 		return ''
 
-	
+
+@register.assignment_tag
+def get_weight(obj_list,stowage):
+	# print(obj_list)
+	# print(stowage)
+	try :
+		x = next(y for y in obj_list if y[0]==stowage)
+		return x[1]
+	except:
+		return 0
+
 
 @register.assignment_tag
 def percent(x,total):

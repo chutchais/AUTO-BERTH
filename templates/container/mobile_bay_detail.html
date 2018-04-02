@@ -159,16 +159,20 @@
 													<td {{first_cont.get_dischart_style|safe }}>
 												{% endif %}
 
+												{% weight first_cont.weight as new_weight %}
+
 													<div class="text-nowrap">
 														
 																{% if first_cont.ready_to_load %}
-																	{{first_cont.container|slice:":3"}}..{{first_cont.container|slice:"7:" }}
+																	{{first_cont.container|slice:":3"}}..{{first_cont.container|slice:"7:" }}<br>
+																		{{new_weight }}
 																{% else %}
 																	<a href="{{ first_cont.get_absolute_url }}?view=mobile&bay={{bay}}&pos={{pos}}" 
 																		data-tooltip="{{first_cont.get_tooltip|safe}}">
 																		{{first_cont.container|slice:":3"}}..{{first_cont.container|slice:"7:" }}
-																		
 																	</a>
+																	<br>
+																	{{new_weight }}
 																{% endif %}
 
 																<small><small>
@@ -246,6 +250,8 @@
 																{{new_weight }}
 															{% endif %}
 														</a>
+														<br>
+														{{new_weight }}
 													</b>
 												{% else %}
 													<a href="{{ x.get_absolute_url }}?view=mobile&bay={{bay}}&pos={{pos}}" 
@@ -256,6 +262,8 @@
 																{{new_weight }}
 															{% endif %}
 														</a>
+														<br>
+														{{new_weight }}
 												{% endif %}
 												<small><small>
 												{% if x.iso_code == "45R1"  %}
@@ -270,6 +278,7 @@
 											</small></small>
 												<br>
 										</div>
+
 								{% endfor %}
 							</td>
 

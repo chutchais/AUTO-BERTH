@@ -47,19 +47,25 @@
 
 							{% for t in tier %}
 								{% combine_stowage bay t row as new_stowage %}
+								{% get_weight current_plan new_stowage as current_weight %}
+								{% weight current_weight as curr_weight %}
+
 									{% if new_stowage in master_plan %}
 										{% if new_stowage == object.stowage %}
 											<td class="text-center danger">
-												<h3><a href="{% url 'container:container-move' object.slug new_stowage %}?q={{ object.container }}&view={{ request.GET.view }}&pos={{request.GET.pos}}">Current</a></h3>
+												<h3><a href="{% url 'container:container-move' object.slug new_stowage %}?q={{ object.container }}&view={{ request.GET.view }}&pos={{request.GET.pos}}">Current</a><br>
+												{{curr_weight}}</h3>
 											</td>
 										{% elif new_stowage == object.original_stowage %}
 											<td class="text-center success">
-												<h3><a href="{% url 'container:container-restore' object.slug %}?q={{ object.container }}&view={{ request.GET.view }}&pos={{request.GET.pos}}">Original</a></h3>
+												<h3><a href="{% url 'container:container-restore' object.slug %}?q={{ object.container }}&view={{ request.GET.view }}&pos={{request.GET.pos}}">Original</a><br>
+												{{curr_weight}}</h3>
 											</td>
 										{% else %}
 											<td class="text-center">
-											<h3><a href="{% url 'container:container-move' object.slug new_stowage %}?q={{ object.container }}&view={{ request.GET.view }}&pos={{request.GET.pos}}">{{t}}{{row}}</a>
-											</td></h3>				
+											<h3><a href="{% url 'container:container-move' object.slug new_stowage %}?q={{ object.container }}&view={{ request.GET.view }}&pos={{request.GET.pos}}">{{t}}{{row}}</a><br>
+												{{curr_weight}}</h3>
+											</td>				
 										{% endif %}
 									{% else %}
 										<td></td>

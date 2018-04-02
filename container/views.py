@@ -113,8 +113,15 @@ class ContainerUpdateView(LoginRequiredMixin,UpdateView):
 
 		c_master = Container.objects.filter(bayplanfile__slug=self.object.bayplanfile.slug,original_bay=bay)
 		c_master_slot_list = c_master.values_list('original_stowage', flat=True)
-		# c_master_list = list(c_master)
+		
+		# To show current Weight of bay
+		c_current = Container.objects.filter(bayplanfile__slug=self.object.bayplanfile.slug,bay=bay)
+		c_current_slot_list = c_current.values_list('stowage','weight')
+		# x=next(y for y in c_current_slot_list if y[0]=='010102')
+		
+
 		context['master_plan'] = c_master_slot_list
+		context['current_plan'] = c_current_slot_list
 
 		# print (self.object.bay)
 		return context
