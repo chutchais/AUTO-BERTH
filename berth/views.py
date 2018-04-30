@@ -104,6 +104,10 @@ class CutOffDeleteView(LoginRequiredMixin,DeleteView):
 #     xls.save(response)
 #     return response
 
+def etb(request,vessel_code,voy):
+	qs = Voy.objects.get(code=vessel_code,voy__contains=voy)
+	return HttpResponse(qs.etb, content_type='text/plain; charset=utf8')
+
 def mobile_index(request):
 	return render(request, 'berth/mobile_bayplan_index.html', {})
 

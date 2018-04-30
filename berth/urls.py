@@ -12,6 +12,7 @@ urlpatterns = [
     url(r'voy/(?P<slug>[-\w]+)/create/$',CutOffCreateView.as_view(),name='cutoff-create'),
     url(r'cutoff/$',views.cutoff, name='cutoff-home'),
     url(r'export/$',views.export, name='export'),
+    url(r'etb/(?P<vessel_code>[-\w]+)/(?P<voy>[-\w]+)/$',views.etb, name='etb'),
 ]
 
 admin.site.site_header = 'Auto Berth Schedule'
