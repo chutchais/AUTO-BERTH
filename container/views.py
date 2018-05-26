@@ -457,6 +457,9 @@ def FileProcess(request,slug):
 	new_count = 0
 	Container.objects.filter(bayplanfile=bayfile).delete()
 	container_list = []
+
+	voy_number = bayfile.voy.voy
+
 	for row_index in range(1, xl_sheet.nrows):
 		load_port	= xl_sheet.cell(row_index, 10).value.__str__().strip()
 		if load_port !='THLCH':
@@ -488,7 +491,7 @@ def FileProcess(request,slug):
 				# print (stowage)
 			# Get Disch Port Object
 			disport_obj,created = DischargePort.objects.get_or_create(name=dis_port)
-			container_slug = slugify("%s-%s" %(vContainer, item_count))
+			container_slug = slugify("%s-%s-%s" %(vContainer,item_count, voy_number))
 			c = Container(bayplanfile=bayfile,item_no=item_count,
 								container=vContainer,iso_code=iso,full=True if full=='Full' else False,
 								slug=container_slug,
