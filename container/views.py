@@ -457,6 +457,7 @@ def FileProcess(request,slug):
 	new_count = 0
 	Container.objects.filter(bayplanfile=bayfile).delete()
 	container_list = []
+	non_stowage_list = []
 
 	voy_number = bayfile.voy.voy
 
@@ -482,6 +483,18 @@ def FileProcess(request,slug):
 			un_no       = xl_sheet.cell(row_index, 19).value.__str__().strip().replace('.0','')
 			stowage		= xl_sheet.cell(row_index, 26).value.__str__().strip().replace('.0','')
 
+			
+			# Add by Chutchai on June 24
+			# To check empty stowage field
+			# print ('Stowage %s - %s ' %  (vContainer,stowage))
+			if stowage == '' or stowage == None :
+				# print ('Found empty stowage %s ' %  vContainer)
+				non_stowage_list.append(vContainer)
+				continue
+				# return "Error"
+
+			# --------------------------
+
 			if load_port !='THLCH':
 				# print ('Not load at LCB %s' % load_port )
 				continue
@@ -504,6 +517,20 @@ def FileProcess(request,slug):
 
 
 			container_list.append(c)
+
+	# print (non_stowage_list)
+	if len(non_stowage_list)>0:
+		fname ='container/container_empty_stowage.html'
+		print ('Found %s containers are empty stowage' % len(non_stowage_list))
+		return render(
+				request,
+				fname,
+				{
+				'object_list': non_stowage_list,
+				'number': len(non_stowage_list),
+				'slug' : bayfile.voy.slug 
+				}
+			)
 
 	Container.objects.bulk_create(container_list)
 			# c = Container.objects.create(bayplanfile=bayfile,item_no=item_count,
