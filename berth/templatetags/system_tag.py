@@ -127,7 +127,7 @@ def is_arrive(etb,etd):
 @register.assignment_tag
 def is_fix_cutoff(service):
 	strService = service.__str__().split('-')[0]
-	service_lists = ['BOOM','HORN','SE1','ANX','TR1','NTX','PH4','IA2','THAI2']#{'BOOM','HORN','SE1','ANX'.'TR1','NTX','PH4','IA2'}
+	service_lists = ['BOOM','HORN','SE1','ANX','TR1','NTX','PH4','IA2','THAI2','THAI2A','THAI2B','009','TP11']#{'BOOM','HORN','SE1','ANX'.'TR1','NTX','PH4','IA2'}
 	if strService in  service_lists :
 		# print(service)
 		return True
@@ -169,6 +169,12 @@ def set_to_Saturday(service,perform_date):
 
 	if 'HORN' in strService :
 		return Saturday.replace(hour=12, minute=00)
+	
+	if '009' in strService :
+		return Saturday.replace(hour=12, minute=00)
+	
+	if 'TP11' in strService :
+		return Saturday.replace(hour=12, minute=00)
 
 
 @register.assignment_tag
@@ -184,7 +190,7 @@ def increase_hour(date_in,hour):
 def is_Boom_or_Horn(service):
 	strService = service.__str__()
 	# print (strService)
-	return True if strService in ['BOOM','HORN'] else False
+	return True if strService in ['BOOM','HORN','009'] else False
 
 @register.assignment_tag
 # ['BOOM','HORN','SE1','ANX'.'TR1','NTX','PH4','IA2']
@@ -205,6 +211,14 @@ def get_fix_cutoff(service,perform_date):
 
 	if 'HORN' in strService :
 		# return Saturday.replace(hour=12, minute=00) #Change on March 20,2018
+		return Sunday.replace(hour=4, minute=00)
+	
+	if '009' in strService :
+    		# return Saturday.replace(hour=12, minute=00) #Change on March 20,2018
+		return Sunday.replace(hour=4, minute=00)
+	
+	if 'TP11' in strService :
+    		# return Saturday.replace(hour=12, minute=00) #Change on March 20,2018
 		return Sunday.replace(hour=4, minute=00)
 
 	if 'SE1' in strService :
@@ -229,6 +243,14 @@ def get_fix_cutoff(service,perform_date):
 
 	if 'THAI2' in strService :
 		# print('THAI2 %s' % firstday)
+		return perform_date - datetime.timedelta(hours=12)
+	
+	if 'THAI2A' in strService :
+    		# print('THAI2 %s' % firstday)
+		return perform_date - datetime.timedelta(hours=12)
+	
+	if 'THAI2B' in strService :
+    		# print('THAI2 %s' % firstday)
 		return perform_date - datetime.timedelta(hours=12)
 
 
