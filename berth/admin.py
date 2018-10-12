@@ -9,6 +9,9 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib import messages
 import copy
 
+# from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedDropdownFilter
+
+
 
 def copy_new_voy(self, request, queryset):
     
@@ -201,9 +204,67 @@ class ETDListFilter(admin.SimpleListFilter):
 #             raise forms.ValidationError("ETD date must be Bigger than ETB")
 #         return self.cleaned_data
 
+class VoyListFilter(admin.SimpleListFilter):
+    # Human-readable title which will be displayed in the
+    # right admin sidebar just above the filter options.
+    title = _('Voy Performing')
+
+    # Parameter for the filter that will be used in the URL query.
+    parameter_name = 'perform'
+
+    def lookups(self, request, model_admin):
+        """
+        Returns a list of tuples. The first element in each
+        tuple is the coded value for the option that will
+        appear in the URL query. The second element is the
+        human-readable name for the option that will appear
+        in the right sidebar.
+        """
+        return (
+            ('arriving', _('Berthing & Arriving')),
+            ('departure', _('Departured')),
+        )
+
+    def queryset(self, request, queryset):
+        """
+        Returns the filtered queryset based on the value
+        provided in the query string and retrievable via
+        `self.value()`.
+        """
+        # Compare the requested value (either '80s' or '90s')
+        # to decide how to filter the queryset.
+        from datetime import date
+        # if self.value() == 'today':
+        #     today = date.today()
+        #     return queryset.filter(eta__year=today.year,eta__month=today.month,eta__day=today.day).order_by('eta')
+        if self.value() == 'departure':
+            import datetime
+            date = datetime.date.today()
+            # start_week = date - datetime.timedelta(date.weekday())
+            # end_week = start_week + datetime.timedelta(7)
+            start_week = date - datetime.timedelta(7)
+            end_week = date + datetime.timedelta(1)
+            # print (start_week, end_week)
+            return queryset.filter(etd__range=[start_week, end_week],
+                                    vessel__v_type__in =('VESSEL','BARGE')).order_by('-etd')
+
+        if self.value() == 'arriving':
+            import datetime
+            date = datetime.date.today()
+            # start_week = date - datetime.timedelta(date.weekday())
+            # end_week = start_week + datetime.timedelta(7)
+            # date = end_week + datetime.timedelta(days=1)
+            # start_week = date - datetime.timedelta(date.weekday())
+            # end_week = start_week + datetime.timedelta(7)
+            start_week = date - datetime.timedelta(3)
+            end_week = date + datetime.timedelta(7)
+            return queryset.filter(etb__range=[start_week, end_week],
+                                    etd__gt = date,
+                                    vessel__v_type__in =('VESSEL','BARGE')).order_by('etb')
+
 class VoyAdmin(admin.ModelAdmin):
     search_fields = ['voy','code','vessel__name','service__name','terminal__name','vsl_oper','remark']
-    list_filter = ('terminal','vessel__v_type',ETAListFilter,ETBListFilter,ETDListFilter,'draft')
+    list_filter = (VoyListFilter,'terminal','vessel__v_type',ETAListFilter,ETBListFilter,ETDListFilter,'draft')
     list_display = ('service','vessel','code','voy','terminal','performa_in','performa_out',
         'eta','etb','etd','dis_no','load_no','est_teu','arrival_draft','vsl_oper')
     fieldsets = [
