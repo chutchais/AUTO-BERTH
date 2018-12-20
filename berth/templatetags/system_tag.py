@@ -225,8 +225,9 @@ def get_fix_cutoff(service,perform_date):
 		# print (Thursday)
 		return Thursday.replace(hour=6, minute=00)
 
-	if 'ANX' in strService :
-		return Tueday.replace(hour=23, minute=59)
+# Remove on Dec 21,2018
+	# if 'ANX' in strService :
+	# 	return Tueday.replace(hour=23, minute=59)
 
 	if 'TR1' in strService :
 		return Thursday.replace(hour=11, minute=00)
@@ -251,6 +252,10 @@ def get_fix_cutoff(service,perform_date):
 	
 	if 'THAI2B' in strService :
     		# print('THAI2 %s' % firstday)
+		return perform_date - datetime.timedelta(hours=12)
+# Add on Dec 21,2018 
+	if 'ANX' in strService :
+		# print('ANX %s' % perform_date)
 		return perform_date - datetime.timedelta(hours=12)
 
 
