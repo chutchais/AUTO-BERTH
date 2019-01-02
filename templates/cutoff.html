@@ -13,7 +13,7 @@
 <div class="container">
 <div class="row">
     <h3>
-    Cut-off Report of Workweek {{ week }} 
+    Cut-off Report of WK {{ week }} 
     <a href="{% url 'berth:cutoff-home' %}?year={{year}}&week={{week|add:-1}}"><small>previous</small></a>
     |<a href="{% url 'berth:cutoff-home' %}"><small>current</small></a>
     |<a href="{% url 'berth:cutoff-home' %}?year={{year}}&week={{week|add:1}}"><small>next</small></a>

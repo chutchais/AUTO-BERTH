@@ -173,16 +173,21 @@ def cutoff(request):
 		today= datetime.date.today()
 		from_date = today -  timedelta(days=today.weekday())
 		to_date = from_date +  timedelta(days=7)
-		year = from_date.strftime('%Y')#-%m-%d %H:%M
-		workweek = from_date.strftime('%W')
-		# print (today,from_date,to_date)
+		
+		# Edit by Chutchai on Jan 2,2019
+		# To fix WorkWeek problem
+		# year = from_date.strftime('%Y')#-%m-%d %H:%M
+		year = to_date.strftime('%Y')#-%m-%d %H:%M
+		# workweek = from_date.strftime('%W')
+		workweek = datetime.date(from_date.year, from_date.month, from_date.day).isocalendar()[1]
+		# print (today,from_date,to_date,workweek)
 	else:
 		# from isoweek import Week
 		# print (year,workweek)
 		d = foo(int(year),int(workweek))
 		from_date = d[0]
 		to_date = d[1]
-		# print(d)
+		print(d)
 	# wk = from_date.isocalendar()[1]
 	# ------------
 
@@ -239,7 +244,7 @@ def cutoff(request):
 	c_obj_list =list(c)
 	lastupdate = c_obj_list[0]
 	# lastupdate = c.first()
-	# print ('Last update %s' % lastupdate)
+	print ('Year %s' % year)
 
 	return render(request, 'cutoff.html', {'A':a,
 						'B':b,
