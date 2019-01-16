@@ -155,8 +155,12 @@ def foo(year, week):
 	from datetime import date, timedelta
 	d = date(year,1,1)
 	# dlt = timedelta(days = ((week-1)*7)+1) #Fix return wrong start and stop date of WorkWeek
-	dlt = timedelta(days = ((week-1)*7))
-	return d + dlt ,  d + dlt + timedelta(days=7)
+	dlt = timedelta(days = ((week-1)*7)-1)
+	return d + dlt ,  d + dlt + timedelta(days=8)
+	# Comment by Chutchai on Jan 16,2019
+	# To fix cut-off workweek report show wrong date range
+	# dlt = timedelta(days = ((week-1)*7))
+	# return d + dlt ,  d + dlt + timedelta(days=7)
 
 def cutoff(request):
 	from django.db.models import Q
@@ -172,7 +176,7 @@ def cutoff(request):
 		# Use current week
 		today= datetime.date.today()
 		from_date = today -  timedelta(days=today.weekday())
-		to_date = from_date +  timedelta(days=7)
+		to_date = from_date +  timedelta(days=8)
 		
 		# Edit by Chutchai on Jan 2,2019
 		# To fix WorkWeek problem
@@ -180,14 +184,14 @@ def cutoff(request):
 		year = to_date.strftime('%Y')#-%m-%d %H:%M
 		# workweek = from_date.strftime('%W')
 		workweek = datetime.date(from_date.year, from_date.month, from_date.day).isocalendar()[1]
-		# print (today,from_date,to_date,workweek)
+		print ('Current from: %s to %s' % (from_date,to_date))
 	else:
 		# from isoweek import Week
 		# print (year,workweek)
 		d = foo(int(year),int(workweek))
 		from_date = d[0]
 		to_date = d[1]
-		print(d)
+		print ('Week assign from: %s to %s' % (from_date,to_date))
 	# wk = from_date.isocalendar()[1]
 	# ------------
 
