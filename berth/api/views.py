@@ -14,8 +14,28 @@ from rest_framework.filters import (
 	OrderingFilter,
 	)
 
-from .serialize import VoySerializer,VoyDetailSerializer
+from .serialize import VoySerializer,VoyDetailSerializer,BerthSerializer
 from berth.models import Voy
+
+
+class BerthListAPIView(ListAPIView):
+	queryset=Voy.objects.all()
+	serializer_class=BerthSerializer
+	filter_backends=[SearchFilter,OrderingFilter]
+	search_fields =['vessel__name','voy','code']
+
+	def get_queryset(self,*args,**kwargs):
+		import datetime
+		from datetime import timedelta
+		today= datetime.date.today()
+		from_date = today - timedelta(days=7)
+		to_date = from_date +  timedelta(days=14)
+		# from_date 	= '2019-03-20'
+		# to_date 	= '2019-03-25'
+		queryset_list = Voy.objects.filter(
+				Q(etb__range=[from_date,to_date])|
+				Q(etd__range=[from_date,to_date])).order_by('etb')
+		return queryset_list
 
 
 

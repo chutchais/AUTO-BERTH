@@ -145,8 +145,15 @@ class Voy(models.Model):
 			teu_load = 0
 		self.est_teu = teu_dis + teu_load
 
-		if self.imp_release_date == None  :
-			self.imp_release_date = self.etb + timedelta(hours=24)
+		# if self.imp_release_date == None  :
+		# 	self.imp_release_date = self.etb + timedelta(hours=24)
+		delta = self.etd - self.etb
+		hours = divmod(delta.total_seconds(), 3600)[0]
+		print ('Port stay %s' % hours)
+		if hours >= 12:
+			self.imp_release_date = self.etb + timedelta(hours=12)
+		else:
+			self.imp_release_date = self.etd
 
 		if self.export_cutoff_date == None :
 			self.export_cutoff_date = self.etb - timedelta(hours=12)

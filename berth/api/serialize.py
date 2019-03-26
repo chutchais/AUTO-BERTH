@@ -7,6 +7,15 @@ from rest_framework.serializers import (
 from berth.models import Voy
 from berth.models import Vessel
 
+# Added by CHutchai on March 26,2019
+# To support new company , that provide Berth schedule
+class BerthSerializer(ModelSerializer):
+	class Meta:
+		model = Voy
+		# fields ='__all__'
+		fields =['service','vessel','code','voy',
+				'performa_in','performa_out','eta','etb','etd',
+				'terminal','vsl_oper','imp_release_date']
 
 
 class VoySerializer(ModelSerializer):
