@@ -29,12 +29,12 @@ class BerthListAPIView(ListAPIView):
 		from datetime import timedelta
 		today= datetime.date.today()
 		from_date = today - timedelta(days=7)
-		to_date = from_date +  timedelta(days=14)
+		to_date = today +  timedelta(days=14)
 		# from_date 	= '2019-03-20'
 		# to_date 	= '2019-03-25'
 		queryset_list = Voy.objects.filter(
 				Q(etb__range=[from_date,to_date])|
-				Q(etd__range=[from_date,to_date])).order_by('etb')
+				Q(etd__range=[from_date,to_date])).exclude(terminal__name='B2').order_by('etb')
 		return queryset_list
 
 
