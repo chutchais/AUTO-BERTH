@@ -8,6 +8,57 @@
     Berth Schedule Report
 {% endblock %}
 
+{% block stylesheet %}
+<style>
+    @media print {
+       * { margin: 0 !important; padding: 0 !important; }
+     /* styles go here */
+         @page {                
+            size: A4;
+            margin: 10mm;
+            /*size: A4 landscape;*/
+          }
+
+          html, body {
+            width: 1024px;
+            height:100%; 
+            overflow: hidden;
+            /*background: #FFF; */
+          }
+
+          body {
+            margin: 20 auto;
+            line-height: 1em;
+            word-spacing:1px;
+            letter-spacing:0.2px;
+            font: 8px Arial,"Times New Roman", Times, serif;
+            background:white;
+            color:black;
+            width: 100%;
+            float: none;
+          }
+
+
+                  a[href]:after {
+            content: none !important;
+          }
+
+        .no-print, .no-print *
+            {
+                display: none !important;
+            }
+
+        {
+          table { page-break-after:auto }
+          tr    { page-break-inside:avoid; page-break-after:auto }
+          td    { page-break-inside:avoid; page-break-after:auto }
+          thead { display:table-header-group }
+          tfoot { display:table-footer-group }
+        }
+
+    }
+</style>
+{% endblock stylesheet %}
 
 {% block form_content %}
 <div class="container">
