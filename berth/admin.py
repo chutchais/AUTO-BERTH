@@ -279,7 +279,13 @@ class VoyAdmin(admin.ModelAdmin):
     ]
     actions =[copy_new_voy]
 
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "vessel":
+            kwargs["queryset"] = Vessel.objects.order_by('name')
+        return super(VoyAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
+
 admin.site.register(Voy,VoyAdmin)
+
 
 
 

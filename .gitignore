@@ -8,4 +8,5 @@ machine/migrations/*.pyc
 db.sqlite3
 berth/migrations/*.py
 berth/migrations/*.pyc
+berth/__pycache__/
 *.sqlite3
