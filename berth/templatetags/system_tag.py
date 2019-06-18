@@ -127,7 +127,8 @@ def is_arrive(etb,etd):
 @register.assignment_tag
 def is_fix_cutoff(service):
 	strService = service.__str__().split('-')[0]
-	service_lists = ['BOOM','HORN','SE1','ANX','TR1','NTX','PH4','IA2','THAI2','THAI2A','THAI2B','009','TP11','SEA1','SEA2']#{'BOOM','HORN','SE1','ANX'.'TR1','NTX','PH4','IA2'}
+	service_lists = ['BOOM','HORN','SE1','ANX','TR1','NTX','PH4','IA2',
+					'THAI2','THAI2A','THAI2B','009','TP11','SEA1','SEA2','PH5']#{'BOOM','HORN','SE1','ANX'.'TR1','NTX','PH4','IA2'}
 	if strService in  service_lists :
 		# print(service)
 		return True
@@ -263,6 +264,10 @@ def get_fix_cutoff(service,perform_date):
 
 	if 'SEA2' in strService :
 		return perform_date - datetime.timedelta(hours=12)
+
+# Add on June 17,2019 
+	if 'PH5' in strService :
+		return Saturday.replace(hour=2, minute=00)
 
 
 
