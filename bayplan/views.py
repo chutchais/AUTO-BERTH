@@ -2,9 +2,11 @@ from django.shortcuts import render
 
 # Create your views here.
 # from pdfdocument.utils import pdf_response 
-from django.contrib.staticfiles.templatetags.staticfiles import static
+# from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.http import HttpResponse
-from django.core.urlresolvers import reverse
+# from django.core.urlresolvers import reverse
+from django.urls import reverse
+
 import os.path
 from django.conf import settings
 

@@ -23,7 +23,8 @@ class BayPlanFile(models.Model):
 	updated_filename = models.FileField(upload_to='bayplan/%Y/%m/%d/',blank=True, null=True)
 	created_date = models.DateTimeField(auto_now_add=True)
 	modified_date = models.DateTimeField(blank=True, null=True,auto_now=True)
-	user = models.ForeignKey('auth.User',blank=True,null=True)
+	# user = models.ForeignKey('auth.User',blank=True,null=True)
+	user = models.ForeignKey('auth.User',blank=True,null=True,on_delete=models.SET_NULL)
 
 	def __str__(self):
 		return ('%s' % (self.voy))

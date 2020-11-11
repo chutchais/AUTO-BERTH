@@ -26,7 +26,8 @@ class Terminal(models.Model):
 	status = models.CharField(max_length=1,choices=STATUS_CHOICES,default=ACTIVE)
 	created_date = models.DateTimeField(auto_now_add=True)
 	modified_date = models.DateTimeField(blank=True, null=True,auto_now=True)
-	user = models.ForeignKey('auth.User',blank=True,null=True)
+	# user = models.ForeignKey('auth.User',blank=True,null=True)
+	user = models.ForeignKey('auth.User',blank=True,null=True,on_delete=models.SET_NULL)
 	
 	def __str__(self):
 		return self.name
@@ -41,7 +42,8 @@ class Service(models.Model):
 	status = models.CharField(max_length=1,choices=STATUS_CHOICES,default=ACTIVE)
 	created_date = models.DateTimeField(auto_now_add=True)
 	modified_date = models.DateTimeField(blank=True, null=True,auto_now=True)
-	user = models.ForeignKey('auth.User',blank=True,null=True)
+	# user = models.ForeignKey('auth.User',blank=True,null=True)
+	user = models.ForeignKey('auth.User',blank=True,null=True,on_delete=models.SET_NULL)
 	
 	def __str__(self):
 		return self.name
@@ -64,8 +66,8 @@ class Vessel(models.Model):
 	status = models.CharField(max_length=1,choices=STATUS_CHOICES,default=ACTIVE)
 	created_date = models.DateTimeField(auto_now_add=True)
 	modified_date = models.DateTimeField(blank=True, null=True,auto_now=True)
-	user = models.ForeignKey('auth.User',blank=True,null=True)
-
+	# user = models.ForeignKey('auth.User',blank=True,null=True)
+	user = models.ForeignKey('auth.User',blank=True,null=True,on_delete=models.SET_NULL)
 	
 	def __str__(self):
 		return self.name
@@ -84,9 +86,12 @@ class Voy(models.Model):
 	voy = models.CharField(max_length=50 )#,primary_key=True
 	slug = models.SlugField(unique=True,blank=True, null=True)
 	code = models.CharField(max_length=20,blank=True, null=True)
-	vessel = models.ForeignKey('Vessel', related_name='plans')
-	service = models.ForeignKey('Service', related_name='plans')
-	terminal = models.ForeignKey('Terminal', related_name='plans')
+	# vessel = models.ForeignKey('Vessel', related_name='plans')
+	# service = models.ForeignKey('Service', related_name='plans')
+	# terminal = models.ForeignKey('Terminal', related_name='plans')
+	vessel = models.ForeignKey('Vessel', related_name='plans',on_delete=models.CASCADE)
+	service = models.ForeignKey('Service', related_name='plans',on_delete=models.CASCADE)
+	terminal = models.ForeignKey('Terminal', related_name='plans',on_delete=models.CASCADE)
 	start_pos = models.IntegerField(verbose_name ='Start Position',default=50)
 	performa_in =  models.DateTimeField(blank=True, null=True)
 	performa_out =  models.DateTimeField(blank=True, null=True)
@@ -272,7 +277,8 @@ class ReportFile(models.Model):
 	remark = models.TextField(blank=True, null=True)
 	created_date = models.DateTimeField(auto_now_add=True)
 	modified_date = models.DateTimeField(blank=True, null=True,auto_now=True)
-	user = models.ForeignKey('auth.User',blank=True,null=True)
+	# user = models.ForeignKey('auth.User',blank=True,null=True)
+	user = models.ForeignKey('auth.User',blank=True,null=True,on_delete=models.SET_NULL)
 
 	def __str__(self):
 		return ('%s' % (self.week_name))
@@ -283,14 +289,16 @@ class ReportFile(models.Model):
 
 # Add new for cutoff setting
 class cutoff(models.Model):
-	voy = models.ForeignKey(Voy)
+	# voy = models.ForeignKey(Voy)
+	voy = models.ForeignKey(Voy,on_delete=models.CASCADE)
 	dry_date = models.DateTimeField(verbose_name ='Dry CutOff',blank=True, null=True)
 	reef_date = models.DateTimeField(verbose_name ='Reef CutOff',blank=True, null=True)
 	chilled_date = models.DateTimeField(verbose_name ='Chilled CutOff',blank=True, null=True)
 	durian_date = models.DateTimeField(verbose_name ='Durian/Longan CutOff',blank=True, null=True)
 	created_date = models.DateTimeField(auto_now_add=True)
 	modified_date = models.DateTimeField(blank=True, null=True,auto_now=True)
-	user = models.ForeignKey('auth.User',blank=True,null=True)
+	# user = models.ForeignKey('auth.User',blank=True,null=True)
+	
 	remark = models.TextField(max_length=255,blank=True, null=True)
 
 	def __str__(self):

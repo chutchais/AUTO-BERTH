@@ -1,8 +1,8 @@
 from django.shortcuts import render
 
 # Create your views here.
-# from pdfdocument.utils import pdf_response 
-from django.contrib.staticfiles.templatetags.staticfiles import static
+
+# from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.http import HttpResponse
 import os.path
 from django.conf import settings
@@ -112,13 +112,14 @@ def etb(request,vessel_code,voy):
 		return HttpResponse('', content_type='text/plain; charset=utf8')
 
 def mobile_index(request):
-	return render(request, 'berth/mobile_bayplan_index.html', {})
+	return HttpResponse(qs.etb, content_type='text/plain; charset=utf8')
 
 
 
 def index(request):
-	reports = ReportFile.objects.all().order_by('-modified_date')
-	return render(request, 'index.html', {'objs': reports})
+	# return HttpResponse("Autoberth System", content_type='text/plain; charset=utf8')
+	# reports = ReportFile.objects.all().order_by('-modified_date')
+	return render(request, 'index.html', {})
 
 
 def export(request):

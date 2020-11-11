@@ -10,7 +10,8 @@ import xlrd
 import re
 from django.db.models import Count,Sum,Value, When,Case,IntegerField,CharField
 from django.urls import reverse_lazy
-from django.core.urlresolvers import reverse
+# from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.shortcuts import redirect
 from django.conf import settings
 from django.utils.text import slugify

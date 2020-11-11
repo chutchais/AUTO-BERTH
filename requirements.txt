@@ -1,0 +1,9 @@
+django
+django-debug-toolbar
+django-cors-headers
+django-colorfield
+djangorestframework
+markdown
+django-filter
+django-excel
+xlrd

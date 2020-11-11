@@ -22,13 +22,14 @@ class DischargePort(models.Model):
 	status = models.CharField(max_length=1,choices=STATUS_CHOICES,default=ACTIVE)
 	created_date = models.DateTimeField(auto_now_add=True)
 	modified_date = models.DateTimeField(blank=True, null=True,auto_now=True)
-	user = models.ForeignKey('auth.User',blank=True,null=True)
+	# user = models.ForeignKey('auth.User',blank=True,null=True)
+	user = models.ForeignKey('auth.User',blank=True,null=True,on_delete=models.SET_NULL)
 	
 	def __str__(self):
 		return self.name
 
 class Container(models.Model):
-	bayplanfile = models.ForeignKey(BayPlanFile)
+	bayplanfile = models.ForeignKey(BayPlanFile,on_delete=models.CASCADE)
 	slug = models.SlugField(unique=True,blank=True, null=True)
 	item_no = models.IntegerField()
 	container = models.CharField(max_length=11)
@@ -37,7 +38,7 @@ class Container(models.Model):
 	partner	  = models.CharField(max_length=10,blank=True, null=True)
 	weight	  = models.IntegerField()
 	load_port = models.CharField(max_length=10,blank=True, null=True)
-	dis_port  = models.ForeignKey(DischargePort,blank=True, null=True)
+	dis_port  = models.ForeignKey(DischargePort,blank=True, null=True,on_delete=models.SET_NULL)
 	# dis_port  = models.CharField(max_length=10,blank=True, null=True)
 	deliverly_port = models.CharField(max_length=10,blank=True, null=True)
 	good_desc = models.CharField(max_length=100,blank=True, null=True)
@@ -53,7 +54,8 @@ class Container(models.Model):
 	upload_date = models.DateTimeField(blank=True, null=True)
 	created_date = models.DateTimeField(auto_now_add=True)
 	modified_date = models.DateTimeField(blank=True, null=True,auto_now=True)
-	user = models.ForeignKey('auth.User',blank=True,null=True)
+	# user = models.ForeignKey('auth.User',blank=True,null=True)
+	user = models.ForeignKey('auth.User',blank=True,null=True,on_delete=models.SET_NULL)
 
 	def __str__(self):
 		return ('%s' % (self.container))

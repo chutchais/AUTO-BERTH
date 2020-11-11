@@ -10,3 +10,4 @@ berth/migrations/*.py
 berth/migrations/*.pyc
 berth/__pycache__/
 *.sqlite3
+env

@@ -36,7 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    # 'django.contrib.staticfiles',
     'debug_toolbar',
     'corsheaders',
     # 'django_admin_listfilter_dropdown',
@@ -140,11 +140,6 @@ MEDIA_ROOT = 'd:\\auto-berth\\media\\'
 # STATIC_ROOT = "C:\\virtualenv\\projects\\autoberth\\data\\static\\"
 # MEDIA_URL = "/media/"
 # MEDIA_ROOT = "C:\\virtualenv\\projects\\autoberth\\data\\media\\"
-
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, "static"),
-#     'd:\\auto-berth\\static\\',
-# ]
 
 
 

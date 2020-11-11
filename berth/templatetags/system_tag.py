@@ -8,7 +8,8 @@ register = template.Library()
 import os
 
 
-@register.assignment_tag
+# @register.assignment_tag
+@register.simple_tag
 def is_readytoload(load_number):
 	if load_number > 0:
 		vType='ok'
@@ -20,7 +21,8 @@ def is_readytoload(load_number):
 		return ''
 
 
-@register.assignment_tag
+# @register.assignment_tag
+@register.simple_tag
 def get_weight(obj_list,stowage):
 	# print(obj_list)
 	# print(stowage)
@@ -31,7 +33,8 @@ def get_weight(obj_list,stowage):
 		return 0
 
 
-@register.assignment_tag
+# @register.assignment_tag
+@register.simple_tag
 def percent(x,total):
 	# print (obj.strip())
 	if x:
@@ -39,42 +42,50 @@ def percent(x,total):
 	else:
 		return 0
 		
-@register.assignment_tag
+# @register.assignment_tag
+@register.simple_tag
 def sum(obj,field):
 	# print (obj.strip())
 	return obj.aggregate(Sum(field))
 
-@register.assignment_tag
+# @register.assignment_tag
+@register.simple_tag
 def weight(x):
 	y=str(x)
 	return ('%s.%s' % (y[:-3],y[2:3]))
 
-@register.assignment_tag
+# @register.assignment_tag
+@register.simple_tag
 def combine_stowage(bay,tier,row):
 	return ('%s%s%s' % (bay,tier,row))
 
-@register.assignment_tag
+# @register.assignment_tag
+@register.simple_tag
 def first_container(obj,stowage):
 	return obj.filter(stowage=stowage).first()
 
-@register.assignment_tag
+# @register.assignment_tag
+@register.simple_tag
 def original_container(obj,stowage):
 	return obj.filter(original_stowage=stowage).first()
 
-@register.assignment_tag
+# @register.assignment_tag
+@register.simple_tag
 def get_container_by_original_stowage(obj_list,slot):
 	for obj in obj_list:
 		if obj.original_stowage == slot:
 			return obj
 
-@register.assignment_tag
+# @register.assignment_tag
+@register.simple_tag
 def get_container_by_stowage(obj_list,slot):
 	for obj in obj_list:
 		if obj.stowage == slot:
 			# print (obj.container,obj.get_dischart_style)
 			return obj
 
-@register.assignment_tag
+# @register.assignment_tag
+@register.simple_tag
 def get_position_by_stowage(slot):
 	row = slot[-2:]
 	if int(row) > 70:
@@ -109,12 +120,14 @@ def filename(value):
     return os.path.basename(value.file.name)
 
 
-@register.assignment_tag
+# @register.assignment_tag
+@register.simple_tag
 def cut(service):
 	return service.__str__().split('-')[0]
 
 
-@register.assignment_tag
+# @register.assignment_tag
+@register.simple_tag
 def is_arrive(etb,etd):
 	if etb < datetime.datetime.now():
 		if etd < datetime.datetime.now():
@@ -124,7 +137,8 @@ def is_arrive(etb,etd):
 		return '...'
 
 
-@register.assignment_tag
+# @register.assignment_tag
+@register.simple_tag
 def is_fix_cutoff(service):
 	strService = service.__str__().split('-')[0]
 	service_lists = ['BOOM','HORN','SE1','ANX','TR1','TR2','NTX','PH4','IA2',
@@ -133,7 +147,8 @@ def is_fix_cutoff(service):
 		# print(service)
 		return True
 
-@register.assignment_tag
+# @register.assignment_tag
+@register.simple_tag
 def is_overdue(perform_date):
 	import datetime
 	now = datetime.datetime.now()
@@ -150,7 +165,8 @@ def is_overdue(perform_date):
 	# 	minutediff = (perform_date-now).total_seconds()/60
 	# 	return 'class=alert-warning' if minutediff <60 else ''
 
-@register.assignment_tag
+# @register.assignment_tag
+@register.simple_tag
 def is_overhour(etb_date,perform_date):
 	if etb_date > perform_date:
 		minutediff = (etb_date-perform_date).total_seconds()/60
@@ -160,7 +176,8 @@ def is_overhour(etb_date,perform_date):
 	return 'class=alert-warning' if minutediff > (24*60) else ''
 
 
-@register.assignment_tag
+# @register.assignment_tag
+@register.simple_tag
 def set_to_Saturday(service,perform_date):
 	strService = service.__str__()
 	firstday = perform_date -  timedelta(days=perform_date.weekday())
@@ -178,22 +195,26 @@ def set_to_Saturday(service,perform_date):
 		return Saturday.replace(hour=12, minute=00)
 
 
-@register.assignment_tag
+# @register.assignment_tag
+@register.simple_tag
 def decrease_hour(date_in,hour):
 	return date_in - timedelta(hours=hour)
 
 
-@register.assignment_tag
+# @register.assignment_tag
+@register.simple_tag
 def increase_hour(date_in,hour):
 	return date_in + timedelta(hours=hour)
 
-@register.assignment_tag
+# @register.assignment_tag
+@register.simple_tag
 def is_Boom_or_Horn(service):
 	strService = service.__str__()
 	# print (strService)
 	return True if strService in ['BOOM','HORN','009'] else False
 
-@register.assignment_tag
+# @register.assignment_tag
+@register.simple_tag
 # ['BOOM','HORN','SE1','ANX'.'TR1','NTX','PH4','IA2']
 def get_fix_cutoff(service,perform_date):
 	strService = service.__str__()
