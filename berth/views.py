@@ -153,11 +153,16 @@ def pdf_view(request):
 # Add by Chutchai on Nov 23,2017
 # to Show Auto Cut-off datetime
 def foo(year, week):
-	from datetime import date, timedelta
-	d = date(year,1,1)
-	# dlt = timedelta(days = ((week-1)*7)+1) #Fix return wrong start and stop date of WorkWeek
-	dlt = timedelta(days = ((week-1)*7)-1)
-	return d + dlt ,  d + dlt + timedelta(days=8)
+	# from datetime import date, timedelta
+	# d = date(year,1,1)
+	# dlt = timedelta(days = ((week-1)*7)-1)
+	# return d + dlt ,  d + dlt + timedelta(days=8)
+	import datetime
+	from datetime import timedelta
+	d = '%s-W%s' % (year,week)
+	from_date = datetime.datetime.strptime(d + '-1', "%Y-W%W-%w")
+	to_date = from_date + timedelta(days=7)
+	return from_date,to_date
 	# Comment by Chutchai on Jan 16,2019
 	# To fix cut-off workweek report show wrong date range
 	# dlt = timedelta(days = ((week-1)*7))
@@ -169,7 +174,7 @@ def cutoff(request):
 	# from datetime import datetime
 	import datetime
 	from datetime import timedelta
-	# import datetime
+	# import datetimequit
 	year = request.GET.get('year', '')
 	workweek = request.GET.get('week', '')
 	
@@ -178,13 +183,17 @@ def cutoff(request):
 		today= datetime.date.today()
 		from_date = today -  timedelta(days=today.weekday())
 		to_date = from_date +  timedelta(days=8)
+
+		# Edit on Jan 9,2021 to Fix wrong Workweek
+		to_date = from_date +  timedelta(days=7)
 		
 		# Edit by Chutchai on Jan 2,2019
 		# To fix WorkWeek problem
 		# year = from_date.strftime('%Y')#-%m-%d %H:%M
 		year = to_date.strftime('%Y')#-%m-%d %H:%M
 		# workweek = from_date.strftime('%W')
-		workweek = datetime.date(from_date.year, from_date.month, from_date.day).isocalendar()[1]
+		# workweek = datetime.date(from_date.year, from_date.month, from_date.day).isocalendar()[1]
+		workweek = today.isocalendar()[1]
 		print ('Current from: %s to %s' % (from_date,to_date))
 	else:
 		# from isoweek import Week
