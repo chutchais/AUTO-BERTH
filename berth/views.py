@@ -111,6 +111,18 @@ def etb(request,vessel_code,voy):
 	else:
 		return HttpResponse('', content_type='text/plain; charset=utf8')
 
+# Added on April 26,2021 -- To provide ETD (departured time)
+def etd(request,vessel_code,voy):
+	try :
+
+		qs = Voy.objects.get(code=vessel_code,voy__contains=voy)
+		if qs:
+			return HttpResponse(qs.etd, content_type='text/plain; charset=utf8')
+		else:
+			return HttpResponse('', content_type='text/plain; charset=utf8')
+	except :
+		return HttpResponse('', content_type='text/plain; charset=utf8')
+
 def mobile_index(request):
 	return HttpResponse(qs.etb, content_type='text/plain; charset=utf8')
 

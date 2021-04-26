@@ -14,6 +14,8 @@ urlpatterns = [
     path('cutoff/',views.cutoff, name='cutoff-home'),
     path('export/',views.export, name='export'),
     path('etb/<vessel_code>/<voy>/',views.etb, name='etb'),
+    # Added on April 26,2021
+    path('etd/<vessel_code>/<voy>/',views.etd, name='etd'),
     # url(r'^$', views.index, name='index'),
     # url(r'voy/(?P<slug>[-\w]+)/$', VoyDetailView.as_view(), name='voy-detail'),
     # url(r'cutoff/(?P<pk>\d+)/delete/$', CutOffDeleteView.as_view(), name='cutoff-delete'),
